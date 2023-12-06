@@ -8,7 +8,6 @@ To install NPM dependencies:
 ```
 npm install express ejs mysql
 ```
-
 To setup the forum database run `create_db.sql`. It may require sudo/admin perms depending on your setup.
 
 Start the server by running `node index.js`.

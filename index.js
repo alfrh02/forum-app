@@ -14,8 +14,8 @@ const db = mysql.createConnection({ // connect to database
 
 let data = { // data for each site to have access to
     siteName: "Alforum",
-    dummyTopics: ["topic1", "topic2", "topic3"],
-    dummyUsers: ["akhoj", "laf", "woopa woo"]
+    // dummyTopics: ["topic1", "topic2", "topic3"],
+    // dummyUsers: ["akhoj", "laf", "woopa woo"]
 }
 
 app.set("views", __dirname + "/views");         // set the views directory for express to pick up files from
@@ -34,13 +34,27 @@ app.get("/about", function(req, res) {
 
 app.get("/users", function(req, res) {
     // list all users via SQL query
-    res.render("users.ejs", data);
+    db.query("SELECT * FROM users", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("users.ejs", data);
+        }
+    });
 });
 
-app.get("/users/:username", function(req, res) {
-    // apend username to data object so that it can be used with EJS
-    data.username = req.params.username;
-    res.render("profile.ejs", data);
+app.get("/user/:username", function(req, res) {
+    // append username to data object so that it can be used with EJS
+    db.query("SELECT * FROM users WHERE name LIKE '" + req.params.username + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            console.log(data);
+            res.render("profile.ejs", data);
+        }
+    })
 });
 
 app.get("/posts", function(req, res) {

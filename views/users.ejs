@@ -6,8 +6,10 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <% for (let i = 0; i < dummyUsers.length; i++) { %>
-            <a href="/users/<%=dummyUsers[i]%>"><%=dummyUsers[i]%></a>
+        <ul>
+        <% for (let i = 0; i < result.length; i++) { %>
+            <li><%=result[i].userId%>, <%=result[i].name%>, <%=result[i].password%>, <%=result[i].description%>, <%=result[i].creationDate%></li>
         <% } %>
+        </ul>
     </body>
 </html>

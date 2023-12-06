@@ -1,11 +1,19 @@
 CREATE DATABASE forum;
 USE forum;
-/*
+
 CREATE TABLE users (
-    userId INT PRIMARY KEY,
+    userId INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(32),
     password VARCHAR(256) NOT NULL,
-    creationDate DATE(),
+    description VARCHAR(256),
+    creationDate DATE
+);
+
+CREATE TABLE topics (
+    topicId INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(32),
+    description VARCHAR(256),
+    creationDate DATE
 );
 
 CREATE TABLE memberships (
@@ -15,22 +23,16 @@ CREATE TABLE memberships (
     FOREIGN KEY(topicId) REFERENCES topics(topicId)
 );
 
-CREATE TABLE topics (
-    topicId INT PRIMARY KEY,
-    name VARCHAR(32),
-    creationDate DATE()
-);
-
 CREATE TABLE posts (
-    postId INT PRIMARY KEY,
+    postId INT PRIMARY KEY AUTO_INCREMENT,
     userId INT,
     topicId INT,
     name VARCHAR(64),
     body TEXT,
-    creationDate DATE(),
+    creationDate DATE,
     FOREIGN KEY(userId) REFERENCES users(userId),
-    FOREIGN KEY(topicId) REFERENCES topics(topicId),
+    FOREIGN KEY(topicId) REFERENCES topics(topicId)
 )
-*/
-CREATE USER "appuser"@"localhost" IDENTIFIED BY "forumapp";
+
+CREATE USER "appuser"@"localhost" IDENTIFIED WITH mysql_native_password BY "forumapp";
 GRANT ALL PRIVILEGES ON forum.* TO "appuser"@"localhost";
