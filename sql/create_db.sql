@@ -32,7 +32,7 @@ CREATE TABLE posts (
     creationDate DATE,
     FOREIGN KEY(userId) REFERENCES users(userId),
     FOREIGN KEY(topicId) REFERENCES topics(topicId)
-)
+);
 
-CREATE USER "appuser"@"localhost" IDENTIFIED WITH mysql_native_password BY "forumapp";
+CREATE USER "appuser"@"localhost" IDENTIFIED BY "forumapp";
 GRANT ALL PRIVILEGES ON forum.* TO "appuser"@"localhost";

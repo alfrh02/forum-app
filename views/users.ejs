@@ -8,7 +8,7 @@
     <body>
         <ul>
         <% for (let i = 0; i < result.length; i++) { %>
-            <li><%=result[i].userId%>, <%=result[i].name%>, <%=result[i].password%>, <%=result[i].description%>, <%=result[i].creationDate%></li>
+            <li><a href="/user/<%=result[i].name%>"><%=result[i].userId%>, <%=result[i].name%>, <%=result[i].password%>, <%=result[i].description%>, <%=result[i].creationDate%></a></li>
         <% } %>
         </ul>
     </body>

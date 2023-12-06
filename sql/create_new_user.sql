@@ -4,4 +4,4 @@ INSERT INTO users (name, password, description, creationDate)VALUES(
     UUID(),
     NULL,
     NOW()
-)
+);

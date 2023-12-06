@@ -32,6 +32,7 @@ app.get("/about", function(req, res) {
     res.render("about.ejs", data);
 });
 
+// -------------------------------------------------------- users
 app.get("/users", function(req, res) {
     // list all users via SQL query
     db.query("SELECT * FROM users", (err, result) => {
@@ -57,6 +58,7 @@ app.get("/user/:username", function(req, res) {
     })
 });
 
+// -------------------------------------------------------- posts
 app.get("/posts", function(req, res) {
     // list all posts via SQL query
     res.render("about.ejs", data);
@@ -67,15 +69,30 @@ app.get("/posts/:postname", function(req, res) {
     res.render("about.ejs", data);
 });
 
+// ------------------------------------------------------ topics
 app.get("/topics", function(req, res) {
     // list all topics via SQL query
-    res.render("topics.ejs", data);
+    db.query("SELECT * FROM topics", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("topics.ejs", data);
+        }
+    });
 });
 
 app.get("/topics/:topicname", function(req, res) {
-    // apend topic name to data object so that it can be used with EJS
-    data.topicname = req.params.topicname;
-    res.render("topic.ejs", data);
+    // append username to data object so that it can be used with EJS
+    db.query("SELECT * FROM topics WHERE name LIKE '" + req.params.username + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            console.log(data);
+            res.render("profile.ejs", data);
+        }
+    })
 });
 
 app.get("/newpost", function(req, res) {
