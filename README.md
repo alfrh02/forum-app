@@ -6,9 +6,7 @@ To setup the Node server, run the following commands:
 
 To install NPM dependencies:
 ```
-npm install express
-npm install ejs
-npm install mysql
+npm install express ejs mysql
 ```
 
 To setup the forum database run `create_db.sql`. It may require sudo/admin perms depending on your setup.
