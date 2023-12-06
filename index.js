@@ -12,8 +12,10 @@ const db = mysql.createConnection({ // connect to database
     database: "forum"
 })
 
-const data = { // data for each site to have access to
-    siteName: "Forum Name"
+let data = { // data for each site to have access to
+    siteName: "Forum Name",
+    dummyTopics: ["topic1", "topic2", "topic3"],
+    dummyUsers: ["akhoj", "laf", "woopa woo"]
 }
 
 app.set("views", __dirname + "/views");         // set the views directory for express to pick up files from
@@ -35,17 +37,29 @@ app.get("/users", function(req, res) {
     res.render("users.ejs", data);
 });
 
-// app.get("/users/grtjgirj", function(req, res) {
-//     res.render("users.ejs", data);
-// });
+app.get("/users/:username", function(req, res) {
+    data.username = req.params.username;
+    res.render("profile.ejs", data);
+});
 
 app.get("/posts", function(req, res) {
     // list all posts via SQL query
     res.render("about.ejs", data);
 });
 
+app.get("/posts/:postname", function(req, res) {
+    // list all posts via SQL query
+    res.render("about.ejs", data);
+});
+
 app.get("/topics", function(req, res) {
     // list all topics via SQL query
+    res.render("topics.ejs", data);
+});
+
+app.get("/topics/:topicname", function(req, res) {
+    // list all topics via SQL query
+    console.log(req.params.topicname);
     res.render("topics.ejs", data);
 });
 

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset UTF-8>
+        <title><%=siteName%>: Topics</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <% for (let i = 0; i < dummyUsers.length; i++) { %>
+            <a href="/users/<%=dummyUsers[i]%>"><%=dummyUsers[i]%></a>
+        <% } %>
+    </body>
+</html>
