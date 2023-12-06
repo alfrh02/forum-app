@@ -13,7 +13,7 @@ const db = mysql.createConnection({ // connect to database
 })
 
 let data = { // data for each site to have access to
-    siteName: "Forum Name",
+    siteName: "Alforum",
     dummyTopics: ["topic1", "topic2", "topic3"],
     dummyUsers: ["akhoj", "laf", "woopa woo"]
 }
@@ -38,6 +38,7 @@ app.get("/users", function(req, res) {
 });
 
 app.get("/users/:username", function(req, res) {
+    // apend username to data object so that it can be used with EJS
     data.username = req.params.username;
     res.render("profile.ejs", data);
 });
@@ -58,9 +59,9 @@ app.get("/topics", function(req, res) {
 });
 
 app.get("/topics/:topicname", function(req, res) {
-    // list all topics via SQL query
-    console.log(req.params.topicname);
-    res.render("topics.ejs", data);
+    // apend topic name to data object so that it can be used with EJS
+    data.topicname = req.params.topicname;
+    res.render("topic.ejs", data);
 });
 
 app.get("/newpost", function(req, res) {
