@@ -52,8 +52,7 @@ app.get("/user/:username", function(req, res) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result});
-            console.log(data);
-            res.render("profile.ejs", data);
+            res.render("user.ejs", data);
         }
     })
 });
@@ -82,15 +81,15 @@ app.get("/topics", function(req, res) {
     });
 });
 
-app.get("/topics/:topicname", function(req, res) {
+app.get("/topic/:topicname", function(req, res) {
     // append username to data object so that it can be used with EJS
-    db.query("SELECT * FROM topics WHERE name LIKE '" + req.params.username + "'", (err, result) => {
+    db.query("SELECT * FROM topics WHERE name LIKE '" + req.params.topicname + "'", (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result});
             console.log(data);
-            res.render("profile.ejs", data);
+            res.render("topic.ejs", data);
         }
     })
 });

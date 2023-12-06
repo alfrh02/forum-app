@@ -3,12 +3,11 @@
     <head>
         <meta charset UTF-8>
         <title><%=siteName%>: Topics</title>
-        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <ul>
         <% for (let i = 0; i < result.length; i++) { %>
-            <li><a href="/user/<%=result[i].name%>"><%=result[i].topicId%>, <%=result[i].name%>, <%=result[i].description%>, <%=result[i].creationDate%></a></li>
+            <li><a href="/topic/<%=result[i].name%>"><%=result[i].topicId%>, <%=result[i].name%>, <%=result[i].description%>, <%=result[i].creationDate%></a></li>
         <% } %>
         </ul>
     </body>
