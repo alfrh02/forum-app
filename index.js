@@ -24,10 +24,37 @@ app.use(express.static(__dirname + "/public")); // tell express to use the `publ
 // express routing
 app.get("/", function(req, res) {
     res.render("index.ejs", data);
-})
+});
 
 app.get("/about", function(req, res) {
     res.render("about.ejs", data);
-})
+});
+
+app.get("/users", function(req, res) {
+    // list all users via SQL query
+    res.render("users.ejs", data);
+});
+
+// app.get("/users/grtjgirj", function(req, res) {
+//     res.render("users.ejs", data);
+// });
+
+app.get("/posts", function(req, res) {
+    // list all posts via SQL query
+    res.render("about.ejs", data);
+});
+
+app.get("/topics", function(req, res) {
+    // list all topics via SQL query
+    res.render("topics.ejs", data);
+});
+
+app.get("/newpost", function(req, res) {
+    res.render("newpost.ejs", data);
+});
+
+app.get("/search", function(req, res) {
+    res.render("search.ejs", data);
+});
 
 app.listen(port); // start site
