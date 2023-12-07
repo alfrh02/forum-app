@@ -5,6 +5,7 @@
         <title><%=siteName%>: Topics</title>
     </head>
     <body>
+        <a href="/">Homepage</a>
         <ul>
         <% for (let i = 0; i < result.length; i++) { %>
             <li><a href="/topic/<%=result[i].name%>"><%=result[i].topicId%>, <%=result[i].name%>, <%=result[i].description%>, <%=result[i].creationDate%></a></li>

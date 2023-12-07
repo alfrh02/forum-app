@@ -45,14 +45,16 @@ app.get("/users", function(req, res) {
     });
 });
 
-app.get("/user/:userid", function(req, res) {
+app.get("/user/:username", function(req, res) {
     // append username to data object so that it can be used with EJS
-    db.query("SELECT * FROM users WHERE userId = " + req.params.userid, (err, result) => {
+    db.query("SELECT * FROM users WHERE name LIKE '" + req.params.username + "'", (err, userdata) => { // get user data
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result}); // append query result to data
-            res.render("user.ejs", data);
+            db.query("SELECT * FROM posts WHERE userId = " + userdata[0].userId, (err, postdata) => {
+                data = Object.assign({}, data, {userdata:userdata[0]}, {postdata:postdata}); // append query result to data
+                res.render("user.ejs", data);
+            })
         }
     })
 });

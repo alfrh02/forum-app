@@ -2,9 +2,10 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: Topics</title>
+        <title><%=siteName%>: Users</title>
     </head>
     <body>
+        <a href="/">Homepage</a>
         <ul>
         <% for (let i = 0; i < result.length; i++) { %>
             <li><a href="/user/<%=result[i].name%>"><%=result[i].userId%>, <%=result[i].name%>, <%=result[i].password%>, <%=result[i].description%>, <%=result[i].creationDate%></a></li>
