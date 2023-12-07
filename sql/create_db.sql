@@ -3,7 +3,7 @@ USE forum;
 
 CREATE TABLE users (
     userId INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(32),
+    name VARCHAR(32) UNIQUE,
     password VARCHAR(256) NOT NULL,
     description VARCHAR(256),
     creationDate DATE
@@ -19,6 +19,7 @@ CREATE TABLE topics (
 CREATE TABLE memberships (
     userId INT,
     topicId INT,
+    joinDate DATE,
     FOREIGN KEY(userId) REFERENCES users(userId),
     FOREIGN KEY(topicId) REFERENCES topics(topicId)
 );

@@ -28,7 +28,9 @@ Start the server by running `node index.js`.
 - [x] User index page
 - [x] User profile page
 - [x] Post index page
+- [x] Set up SQL database & scripts
 - [x] Post submission page
+    - [ ] Check for topic membership
 - [ ] Put topic name in post URL
 - [ ] Search functionality
 - [ ] Register
