@@ -1,5 +1,5 @@
 USE forum;
-INSERT INTO posts (userId, topicId, name, body, creationDate)VALUES(
+INSERT INTO posts (userId, topicId, postName, postBody, postCreationDate)VALUES(
     1,
     1,
     "Name",

@@ -16,6 +16,8 @@ npm install express ejs mysql body-parser
 
 The `sql/` folder contains files that can be ran to create the database & insert dummy data. Make sure you have generated the database before running the server. If there is nothing in the database, the websites may show up blank.
 
+If you're running MariaDB instead of MySQL, run `create_db_arch.sql` instead.
+
 #### Start Server
 
 Start the server by running `node index.js`.
@@ -42,8 +44,9 @@ Posts are identified internally and externally through their IDs, meaning that t
 - [x] Post submission page
     - [ ] Check for topic membership
 - [ ] FIX : change membership columns to utilise user & topic names instead of IDs
-    - [ ] Make user & topic names their primary keys? 
+    - [ ] Make user & topic names their primary keys?
 - [ ] Put topic name in post URL
+- [ ] Change primary keys to names instead of IDs
 - [x] User search functionality
 - [x] Post search functionality
     - There probably won't be enough topics to warrant a search function for it.
