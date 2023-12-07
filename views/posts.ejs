@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset UTF-8>
+        <title><%=siteName%>: Posts</title>
+    </head>
+    <body>
+        <form method="POST">
+            <input type="text" id="name"/>
+            <input type="submit" value="Search"/>
+        </form>
+        <% for (let i = 0; i < result.length; i++) { %>
+            <div>
+                <a href="/post/<%=result[i].postId%>"> <%=result[i].name%>, <%=result[i].creationDate%></a>
+            </div>
+        <% } %>
+    </body>
+</html>

@@ -9,7 +9,7 @@ To run this application locally, make sure you have MySQL, Node.js, and NPM inst
 To install Node dependencies:
 
 ```
-npm install express ejs mysql
+npm install express ejs mysql body-parser
 ```
 
 #### Database Setup
