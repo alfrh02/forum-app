@@ -45,9 +45,9 @@ app.get("/users", function(req, res) {
     });
 });
 
-app.get("/user/:username", function(req, res) {
+app.get("/user/:userid", function(req, res) {
     // append username to data object so that it can be used with EJS
-    db.query("SELECT * FROM users WHERE name LIKE '" + req.params.username + "'", (err, result) => {
+    db.query("SELECT * FROM users WHERE userId = " + req.params.userid, (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
@@ -103,12 +103,18 @@ app.get("/posts", function(req, res) {
 
 app.get("/post/:postid", function(req, res) {
     // list all posts via SQL query
-    db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, result) => {
+    db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, postdata) => {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result})
-            res.render("post.ejs", data);
+            db.query("SELECT * FROM users WHERE userId = " + postdata[0].userId, (err, userdata) => {
+                if (err) {
+                    console.error(err.message);
+                } else {
+                    data = Object.assign({}, data, {postdata:postdata[0]}, {userdata:userdata[0]});
+                    res.render("post.ejs", data);
+                }
+            })
         }
     })
 });
@@ -118,7 +124,6 @@ app.get("/newpost", function(req, res) {
 });
 
 app.post("/postsubmitted", function(req, res) {
-    console.log(req.body);
     let sqlquery = "INSERT INTO posts (userId, topicId, name, body, creationDate)VALUES(" +
         1 + ", " +
         1 + ", " +
@@ -127,9 +132,7 @@ app.post("/postsubmitted", function(req, res) {
         "NOW()" +
     ")";
 
-    console.log(sqlquery);
-
-    db.query(sqlquery, function(err, result) {
+    db.query(sqlquery, (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
@@ -138,7 +141,7 @@ app.post("/postsubmitted", function(req, res) {
     });
 });
 
-app.post("/search", function(req, res) {
+app.post("/searchresult", function(req, res) {
     console.log(req);
 });
 

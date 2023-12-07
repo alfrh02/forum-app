@@ -2,10 +2,11 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: <%=result[0].name%></title>
+        <title><%=siteName%>: <%=postdata.name%></title>
     </head>
     <body>
-        <h1><%=result[0].name%></h1>
-        <p><%=result[0].body%></p>
+        <h1><%=postdata.name%></h1>
+        <a href="/user/<%=userdata.userId%>"><%=userdata.name%></a>
+        <p><%=postdata.body%></p>
     </body>
 </html>
