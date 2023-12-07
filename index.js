@@ -57,7 +57,7 @@ app.get("/user/:username", function(req, res) {
                 if (err) {
                     console.error(err.message);
                 } else {
-                    db.query("SELECT * FROM memberships WHERE userId = " + user[0].userId, (err, membershipdata) => {
+                    db.query("SELECT * FROM memberships WHERE userId = " + userdata[0].userId, (err, membershipdata) => {
                         if (err) {
                             console.error(err.message);
                         } else {

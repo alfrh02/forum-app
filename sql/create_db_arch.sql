@@ -1,3 +1,8 @@
+-- arch linux relies on the MySQL fork MariaDB due to Oracle being anti-open source.
+-- This file practically does the same as create_db.sql, but user setup is slightly different.
+-- This is only for people running Arch Linux/MariaDB locally. Linux servers that are running the original MySQL client
+-- should use create_db.sql.
+
 CREATE DATABASE forum;
 USE forum;
 
@@ -35,5 +40,5 @@ CREATE TABLE posts (
     FOREIGN KEY(topicId) REFERENCES topics(topicId)
 );
 
-CREATE USER "appuser"@"localhost" IDENTIFIED WITH mysql_native_password BY "forumapp";
+CREATE USER "appuser"@"localhost" IDENTIFIED BY "forumapp";
 GRANT ALL PRIVILEGES ON forum.* TO "appuser"@"localhost";
