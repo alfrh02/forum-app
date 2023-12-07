@@ -17,7 +17,7 @@
             <!-- POSTS -->
             <% for (let i = 0; i < result.length; i++) { %>
                 <div>
-                    <a href="/post/<%=result[i].postId%>"> <%=result[i].postName%></a>
+                    <a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"> <%=result[i].postName%></a>
                     <a href="/user/<%=result[i].userName%>"> by <%=result[i].userName%></a>, <%=result[i].postCreationDate%>
                 </div>
             <% } %>

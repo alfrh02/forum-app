@@ -2,15 +2,15 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: <%=result[0].topicName%></title>
+        <title><%=siteName%>: <%=result.topicName%></title>
     </head>
     <body>
         <a href="/">Homepage</a>
-        <%=result[0].topicName%>
+        <h1><%=result.topicName%></h1>
         <ul>
-        <% for (let i = 1; i < result.length - 1; i++) { %>
+        <!-- <% for (let i = 1; i < result.length - 1; i++) { %>
             <li><a href="/topic/<%=result[0].topicName%>/<%=result[i].postId%>"><%=result[i].postName%></a></li>
-        <% } %>
+        <% } %> -->
         </ul>
     </body>
 </html>

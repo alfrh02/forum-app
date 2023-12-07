@@ -25,11 +25,10 @@ app.engine("html", ejs.renderFile);              // tell express to use EJS to r
 app.use(express.static(__dirname + "/public"));  // tell express to use the `public/` folder for files to serve to the client (such as css)
 app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to req.body for form submissions
 
-// NOTE: some query results are passed to the site as the first of an array (e.g. `result[0]`.) This is because the expected output is for one item,
-// whereas db.query always gives an array. This makes the .ejs files cleaner.
-
-// In app.get() functions where there is only one database query, the query is always named `result`. In functions with multiple queries, the results are named according to their
-// table (e.g. `postsresult` or `usersresult`). The resulting data must always be passed in to the .ejs sites as `result`.
+// Internally sites are either "profiles" or "indexes". All indexes are rendered through `index.ejs`.
+// Indexes use multiple rows of data - the users, topics, or posts pages.
+// Profiles can use multiple rows of data, but fundamentally rely on one row of data. For instance, a user profile relies on one row of data from the `users` table, but may
+// query for all of their posts & memberships.
 
 // --------------------------------------------------------- misc
 app.get("/", function(req, res) {
@@ -38,79 +37,6 @@ app.get("/", function(req, res) {
 
 app.get("/about", function(req, res) {
     res.render("about.ejs", data);
-});
-
-// -------------------------------------------------------- users
-app.get("/users", function(req, res) {
-    // list all users via SQL query
-    db.query("SELECT * FROM users", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result}); // append query result to data
-            res.render("index/index.ejs", data);
-        }
-    });
-});
-
-app.get("/user/:username", function(req, res) {
-    db.query("SELECT * FROM users WHERE userName LIKE '" + req.params.username + "'", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result[0]});
-            res.render("profiles/user.ejs", data)
-        }
-    } )
-});
-
-// ------------------------------------------------------ topics
-app.get("/topics", function(req, res) {
-    // list all topics via SQL query
-    db.query("SELECT * FROM topics", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("index/index.ejs", data);
-        }
-    });
-});
-
-app.get("/topic/:topicname", function(req, res) {
-    // this has to be two separate queries, otherwise there is redundant data being transferred in each table
-    db.query("SELECT * FROM topics WHERE topicName LIKE '" + req.params.topicname + "'", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result}); // append the second query to data as "result"
-            res.render("profiles/topic.ejs", data);
-        }
-    });
-});
-
-// -------------------------------------------------------- posts
-app.get("/posts", function(req, res) {
-    // list all posts via SQL query
-    db.query("SELECT * FROM posts INNER JOIN topics ON posts.topicName = topics.topicName", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("index/index.ejs", data);
-        }
-    })
-});
-
-app.get("/topic/:topicname/:postid", function(req, res) {
-    db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("profiles/post.ejs", data);
-        }
-    })
 });
 
 app.get("/newpost", function(req, res) {
@@ -144,6 +70,74 @@ app.post("/searchresult/:table", function(req, res) {
             res.render("searchresult.ejs", data);
         }
     })
+});
+
+// ------------------------------------------------------ indexes
+app.get("/posts", function(req, res) {
+    db.query("SELECT * FROM posts INNER JOIN topics ON posts.topicName = topics.topicName", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("index/index.ejs", data);
+        }
+    })
+});
+
+app.get("/topics", function(req, res) {
+    db.query("SELECT * FROM topics", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("index/index.ejs", data);
+        }
+    });
+});
+
+app.get("/users", function(req, res) {
+    db.query("SELECT * FROM users", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result}); // append query result to data
+            res.render("index/index.ejs", data);
+        }
+    });
+});
+
+// ---------------------------------------------------- profiles
+app.get("/topic/:topicname/:postid", function(req, res) {
+    db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result[0]});
+            res.render("profiles/post.ejs", data);
+        }
+    })
+});
+
+app.get("/user/:username", function(req, res) {
+    db.query("SELECT * FROM users WHERE userName LIKE '" + req.params.username + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result[0]});
+            res.render("profiles/user.ejs", data)
+        }
+    } )
+});
+
+app.get("/topic/:topicname", function(req, res) {
+    db.query("SELECT * FROM topics WHERE topicName LIKE '" + req.params.topicname + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result[0]}); // append the second query to data as "result"
+            res.render("profiles/topic.ejs", data);
+        }
+    });
 });
 
 app.listen(port); // start site
