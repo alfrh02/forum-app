@@ -49,26 +49,7 @@ app.get("/users", function(req, res) {
 
 app.get("/user/:username", function(req, res) {
     // append username to data object so that it can be used with EJS
-    db.query("SELECT * FROM users WHERE name LIKE '" + req.params.username + "'", (err, userdata) => { // get user table data
-        if (err) {
-            console.error(err.message);
-        } else {
-            db.query("SELECT * FROM posts WHERE userId = " + userdata[0].userId, (err, postdata) => { // get user's posts
-                if (err) {
-                    console.error(err.message);
-                } else {
-                    db.query("SELECT * FROM memberships WHERE userId = " + userdata[0].userId, (err, membershipdata) => {
-                        if (err) {
-                            console.error(err.message);
-                        } else {
-                            data = Object.assign({}, data, {userdata:userdata[0]}, {postdata:postdata}, {membershipdata:membershipdata}); // append query result to data
-                            res.render("user.ejs", data);
-                        }
-                    })
-                }
-            })
-        }
-    })
+    res.render("user.ejs", data);
 });
 
 // ------------------------------------------------------ topics
@@ -86,7 +67,7 @@ app.get("/topics", function(req, res) {
 
 app.get("/topic/:topicname", function(req, res) {
     // select specific topic from URL
-    db.query("SELECT * FROM topics WHERE name LIKE '" + req.params.topicname + "'", (err, topicdata) => {
+    db.query("SELECT * FROM topics WHERE topicName LIKE '" + req.params.topicname + "'", (err, topicdata) => {
         if (err) {
             console.error(err.message);
         } else {
@@ -105,17 +86,18 @@ app.get("/topic/:topicname", function(req, res) {
 // -------------------------------------------------------- posts
 app.get("/posts", function(req, res) {
     // list all posts via SQL query
-    db.query("SELECT * FROM posts", (err, result) => {
+    db.query("SELECT * FROM posts INNER JOIN topics ON posts.topicId = topics.topicId", (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result});
+            console.log(data);
             res.render("posts.ejs", data);
         }
     })
 });
 
-app.get("/post/:postid", function(req, res) {
+app.get("/topic/:topicname/:postid", function(req, res) {
     // list all posts via SQL query
     db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, postdata) => {
         if (err) {
@@ -138,7 +120,7 @@ app.get("/newpost", function(req, res) {
 });
 
 app.post("/postsubmitted", function(req, res) {
-    let sqlquery = "INSERT INTO posts (userId, topicId, name, body, creationDate)VALUES(" +
+    let sqlquery = "INSERT INTO posts (userId, topicId, postName, postBody, postCreationDate)VALUES(" +
         1 + ", " +
         1 + ", " +
         "'" + req.body.posttitle + "', " +
@@ -155,8 +137,8 @@ app.post("/postsubmitted", function(req, res) {
     });
 });
 
-app.post("/searchresult", function(req, res) {
-    db.query("SELECT * FROM posts WHERE name LIKE '%" + req.body.search + "%'", (err, result) => {
+app.post("/searchresult/:table", function(req, res) {
+    db.query("SELECT * FROM " + req.params.table + "s" + " WHERE " + req.params.table + " name LIKE '%" + req.body.search + "%'", (err, result) => {
         if (err) {
             console.error(err.message);
         } else {

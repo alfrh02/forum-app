@@ -3,17 +3,17 @@ USE forum;
 
 CREATE TABLE users (
     userId INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(32) UNIQUE,
-    password VARCHAR(256) NOT NULL,
-    description VARCHAR(256),
-    creationDate DATE
+    userName VARCHAR(32) UNIQUE,
+    userPassword VARCHAR(256) NOT NULL,
+    userDescription VARCHAR(256),
+    userCreationDate DATE
 );
 
 CREATE TABLE topics (
     topicId INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(32),
-    description VARCHAR(256),
-    creationDate DATE
+    topicName VARCHAR(32),
+    topicDescription VARCHAR(256),
+    topicCreationDate DATE
 );
 
 CREATE TABLE memberships (
@@ -28,9 +28,9 @@ CREATE TABLE posts (
     postId INT PRIMARY KEY AUTO_INCREMENT,
     userId INT,
     topicId INT,
-    name VARCHAR(64),
-    body TEXT,
-    creationDate DATE,
+    postName VARCHAR(64),
+    postBody TEXT,
+    postCreationDate DATE,
     FOREIGN KEY(userId) REFERENCES users(userId),
     FOREIGN KEY(topicId) REFERENCES topics(topicId)
 );

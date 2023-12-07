@@ -6,10 +6,14 @@
     </head>
     <body>
         <a href="/">Homepage</a>
-        <ul>
+        <form method="POST" action="/searchresult/user">
+            <input type="text" id="search" name="search"/>
+            <input type="submit" value="Search"/>
+        </form>
         <% for (let i = 0; i < result.length; i++) { %>
-            <li><a href="/user/<%=result[i].name%>"><%=result[i].userId%>, <%=result[i].name%>, <%=result[i].password%>, <%=result[i].description%>, <%=result[i].creationDate%></a></li>
+            <div>
+                <a href="/post/<%=result[i].postId%>"> <%=result[i].name%>, <%=result[i].creationDate%></a>
+            </div>
         <% } %>
-        </ul>
     </body>
 </html>

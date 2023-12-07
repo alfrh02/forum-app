@@ -22,6 +22,16 @@ Start the server by running `node index.js`.
 
 ---
 
+### Logic
+
+Users, topics, and posts each have a userId, topicId, and postId respectively. These are integers with automatic incrementation.
+
+Users & topics are only identified internally via their IDs. As topic & user names are unique, they are used in URLs for increased readability to the end user.
+
+Posts are identified internally and externally through their IDs, meaning that their IDs are used for the URL, as post titles are not supposed to be unique.
+
+---
+
 ### TODO
 
 - [x] Topic index page
@@ -34,7 +44,8 @@ Start the server by running `node index.js`.
 - [ ] FIX : change membership columns to utilise user & topic names instead of IDs
     - [ ] Make user & topic names their primary keys? 
 - [ ] Put topic name in post URL
-- [ ] Post & user search functionality
+- [x] User search functionality
+- [x] Post search functionality
     - There probably won't be enough topics to warrant a search function for it.
 - [ ] Register
 - [ ] Login/logout
