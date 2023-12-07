@@ -6,8 +6,8 @@
     </head>
     <body>
         <a href="/">Homepage</a>
-        <form method="POST">
-            <input type="text" id="name"/>
+        <form method="POST" action="/searchresult">
+            <input type="text" id="search" name="search"/>
             <input type="submit" value="Search"/>
         </form>
         <% for (let i = 0; i < result.length; i++) { %>

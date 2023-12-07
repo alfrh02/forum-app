@@ -10,7 +10,9 @@ const db = mysql.createConnection({ // connect to database
     host: "localhost",
     user: "appuser",
     password: "forumapp",
-    database: "forum"
+    database: "forum",
+    timezone: "local",
+    dateStrings: true
 })
 
 let data = { // data for each site to have access to
@@ -21,7 +23,7 @@ app.set("views", __dirname + "/views");          // set the views directory for 
 app.set("view engine", "ejs");                   // set EJS as our views engine
 app.engine("html", ejs.renderFile);              // tell express to use EJS to render HTML files
 app.use(express.static(__dirname + "/public"));  // tell express to use the `public/` folder for files to serve to the client (such as css)
-app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to req.body
+app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to req.body for form submissions
 
 // express routing
 app.get("/", function(req, res) {
@@ -47,13 +49,23 @@ app.get("/users", function(req, res) {
 
 app.get("/user/:username", function(req, res) {
     // append username to data object so that it can be used with EJS
-    db.query("SELECT * FROM users WHERE name LIKE '" + req.params.username + "'", (err, userdata) => { // get user data
+    db.query("SELECT * FROM users WHERE name LIKE '" + req.params.username + "'", (err, userdata) => { // get user table data
         if (err) {
             console.error(err.message);
         } else {
-            db.query("SELECT * FROM posts WHERE userId = " + userdata[0].userId, (err, postdata) => {
-                data = Object.assign({}, data, {userdata:userdata[0]}, {postdata:postdata}); // append query result to data
-                res.render("user.ejs", data);
+            db.query("SELECT * FROM posts WHERE userId = " + userdata[0].userId, (err, postdata) => { // get user's posts
+                if (err) {
+                    console.error(err.message);
+                } else {
+                    db.query("SELECT * FROM memberships WHERE userId = " + user[0].userId, (err, membershipdata) => {
+                        if (err) {
+                            console.error(err.message);
+                        } else {
+                            data = Object.assign({}, data, {userdata:userdata[0]}, {postdata:postdata}, {membershipdata:membershipdata}); // append query result to data
+                            res.render("user.ejs", data);
+                        }
+                    })
+                }
             })
         }
     })
@@ -144,7 +156,14 @@ app.post("/postsubmitted", function(req, res) {
 });
 
 app.post("/searchresult", function(req, res) {
-    console.log(req);
+    db.query("SELECT * FROM posts WHERE name LIKE '%" + req.body.search + "%'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("searchresult.ejs", data);
+        }
+    })
 });
 
 app.listen(port); // start site

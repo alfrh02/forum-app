@@ -31,8 +31,11 @@ Start the server by running `node index.js`.
 - [x] Set up SQL database & scripts
 - [x] Post submission page
     - [ ] Check for topic membership
+- [ ] FIX : change membership columns to utilise user & topic names instead of IDs
+    - [ ] Make user & topic names their primary keys? 
 - [ ] Put topic name in post URL
-- [ ] Search functionality
+- [ ] Post & user search functionality
+    - There probably won't be enough topics to warrant a search function for it.
 - [ ] Register
 - [ ] Login/logout
 - [ ] Ability to delete posts

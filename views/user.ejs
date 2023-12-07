@@ -8,8 +8,17 @@
         <a href="/">Homepage</a>
         <h1><%=userdata.name%></h1>
         <ul>
-            <% for (let i = 0; i < postdata.length; i++) { %>
-                <li><a href="/post/<%=postdata[i].postId%>"><%=postdata[i].name%></a></li>
+            <% if (postdata.length != 0) { %>
+                <h2>Posts</h2>
+                <% for (let i = 0; i < postdata.length; i++) { %>
+                    <li><a href="/post/<%=postdata[i].postId%>"><%=postdata[i].name%></a></li>
+                <% } %>
+            <% } %>
+            <% if (membershipdata.length != 0) { %>
+                <h2>Memberships</h2>
+                <% for (let i = 0; i < membershipdata.length; i++) { %>
+                    <li><a href="/topic/<%=membershipdata[i].topicId%>"><%=postdata[i].name%></a></li>
+                <% } %>
             <% } %>
         </ul>
     </body>

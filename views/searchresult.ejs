@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset UTF-8>
+        <title><%=siteName%>: Topics</title>
+    </head>
+    <body>
+        <a href="/">Homepage</a>
+        <ul>
+        <% for (let i = 0; i < result.length; i++) { %>
+            <li><a href="/post/<%=result[i].name%>"><%=result[i].name%>, <%=result[i].creationDate%></a></li>
+        <% } %>
+        </ul>
+    </body>
+</html>
