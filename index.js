@@ -41,6 +41,28 @@ app.get("/about", function(req, res) {
     res.render("about.ejs", data);
 });
 
+app.post("/searchresult", async function(req, res) {
+    let query = function(query, table) {
+        db.query("SELECT " + query + " FROM " + table, (err, result) => {
+            if (err) {
+                console.error(err.message);
+            } else {
+                data = Object.assign({}, data, {result:result});
+                console.log(data);
+                res.render("index.ejs", data);
+            }
+        });
+    }
+
+    if (req.body.posts != undefined) {
+        query("*", "posts");
+    } else if (req.body.topics != undefined) {
+        query("*", "posts");
+    } else if (req.body.users != undefined) {
+        query("userName, userDescription, userCreationDate", "users");
+    }
+});
+
 app.get("/newpost", function(req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
     res.render("newpost.ejs", data);
@@ -102,44 +124,33 @@ app.post("/postsubmitted", function(req, res) {
     });
 });
 
-app.post("/searchresult", async function(req, res) {
+app.get("/register", function (req, res) {
+    data = Object.assign({}, data, alreadyfailed = false);
+    res.render("register.ejs", data);
+});
+
+app.post("/registered", function(req, res) {
     console.log(req.body);
-
-    // posts
-    // postid
-    // postname
-    // post creation date
-    // post description..?
-
-    // users
-    // username
-    // user description
-    // user creation date
-
-    // topics
-    // topic name
-    // topic description
-    // topic creation date
-
-    let query = function(query, table) {
-        db.query("SELECT " + query + " FROM " + table, (err, result) => {
-            if (err) {
-                console.error(err.message);
-            } else {
-                data = Object.assign({}, data, {result:result});
-                console.log(data);
-                res.render("index.ejs", data);
-            }
-        });
+    if (req.body.password != req.body.redo_password) {
+        data = Object.assign({}, data, alreadyfailed = true);
+        res.render("register.ejs", data);
+        return;
     }
 
-    if (req.body.posts != undefined) {
-        query("*", "posts");
-    } else if (req.body.topics != undefined) {
-        query("*", "posts");
-    } else if (req.body.users != undefined) {
-        query("userName, userDescription, userCreationDate", "users");
-    }
+    sqlquery = "INSERT INTO users (userName, userPassword, userDescription, userCreationDate)VALUES(" +
+        "'" + req.body.username + "', " +
+        "'" + req.body.password + "', " +
+        "NULL," +
+        "NOW()" +
+    ")";
+
+    db.query(sqlquery, (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            res.render("registersuccess.ejs", data);
+        }
+    });
 });
 
 // ------------------------------------------------------ indexes

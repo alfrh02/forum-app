@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset UTF-8>
+        <title><%=siteName%>: New Post</title>
+    </head>
+    <body>
+        <a href="/">Homepage</a>
+        <% if (alreadyfailed == true) { %>
+            <form method="POST" action=/registered>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="<%=previous.username%>"/>
+
+                <label for="topic">Password:</label>
+                <input type="password" id="password" name="password" value="<%=previous.password%>"/>
+
+                <label for="topic">Password:</label>
+                <input type="password" id="redo_password" name="redo_password">
+
+                <input type="submit" value="Submit"/>
+            </form>
+            Error.
+        <% } else { %>
+            <form method="POST" action=/registered>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"/>
+
+                <label for="topic">Password:</label>
+                <input type="password" id="password" name="password"/>
+
+                <label for="topic">Password:</label>
+                <input type="password" id="redo_password" name="redo_password">
+
+                <input type="submit" value="Submit"/>
+            </form>
+        <% } %>
+    </body>
+</html>

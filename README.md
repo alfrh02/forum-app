@@ -39,7 +39,7 @@ Start the server by running `node index.js`.
 - [x] User search functionality
 - [x] Post search functionality
 - [x] Topic search functionality
-- [ ] Registering
+- [x] Registering
 - [ ] Login/logout
 - [ ] Ability to delete posts
 - [ ] Admin perms
