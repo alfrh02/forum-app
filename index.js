@@ -48,7 +48,6 @@ app.post("/searchresult", async function(req, res) {
                 console.error(err.message);
             } else {
                 data = Object.assign({}, data, {result:result});
-                console.log(data);
                 res.render("index.ejs", data);
             }
         });
@@ -100,7 +99,7 @@ app.post("/postsubmitted", function(req, res) {
     });
 
     if (incorrectCredentials) {
-        data = Object.assign({}, data, alreadyfailed = true, {previouspost:req.body})
+        data = Object.assign({}, data, alreadyfailed = true, {previous:req.body})
         res.render("newpost.ejs", data);
         return;
     }
@@ -129,7 +128,6 @@ app.get("/newtopic", function(req, res) {
 });
 
 app.post("/topicsubmitted", function(req, res) {
-    console.log(req.body);
     let incorrectCredentials = false;
 
     // check if username and password are correct
@@ -137,7 +135,6 @@ app.post("/topicsubmitted", function(req, res) {
         if (err) {
             console.error(err.message);
         } else {
-            console.log(result);
             if (result[0] == undefined) { // password does not correlate to any account
                 incorrectCredentials = true;
                 return;
@@ -149,9 +146,8 @@ app.post("/topicsubmitted", function(req, res) {
         }
     });
 
-    console.log(incorrectCredentials);
     if (incorrectCredentials) {
-        data = Object.assign({}, data, alreadyfailed = true, {previouspost:req.body})
+        data = Object.assign({}, data, alreadyfailed = true, {previous:req.body})
         res.render("newpost.ejs", data);
         return;
     }
@@ -172,6 +168,58 @@ app.post("/topicsubmitted", function(req, res) {
     });
 });
 
+app.post("/jointopic/:topicname", function(req, res) {
+    let incorrectCredentials = false;
+
+    // check if username and password are correct
+    db.query("SELECT userName FROM users WHERE userPassword = '" + req.body.password + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            if (result[0] == undefined) { // password does not correlate to any account
+                incorrectCredentials = true;
+                return;
+            }
+            if (result[0].userName != req.body.username || result[0].userName != "alfred") { // incorrect password-username combination, or not admin
+                incorrectCredentials = true;
+                return;
+            }
+        }
+    });
+
+    // check if the user is already part of the topic they are trying to join
+    db.query("SELECT topicName FROM memberships WHERE userName = '" + req.body.username + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            // iterate through results to find a matching topic name. if one is found, reject their join request
+            for (let i = 0; i < result.length; i++) {
+                if (result[i].topicName == req.params.topicname) {
+                    incorrectCredentials = true;
+                }
+            }
+
+            if (incorrectCredentials) {
+                res.redirect("/topic/" + req.params.topicname);
+                return;
+            }
+
+            let sqlquery = "INSERT INTO memberships (userName, topicName, joinDate)VALUES(" +
+                "'" + req.body.username + "', " +
+                "'" + req.params.topicname + "', " +
+                "NOW()" +
+            ")";
+
+            db.query(sqlquery, (err) => {
+                if (err) {
+                    console.error(err.message);
+                } else {
+                    res.render("success.ejs", data)
+                }
+            });
+        }
+    })
+})
 
 app.get("/register", function (req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
@@ -179,7 +227,6 @@ app.get("/register", function (req, res) {
 });
 
 app.post("/registered", function(req, res) {
-    console.log(req.body);
     if (req.body.password != req.body.redo_password) {
         data = Object.assign({}, data, alreadyfailed = true);
         res.render("register.ejs", data);
@@ -193,11 +240,11 @@ app.post("/registered", function(req, res) {
         "NOW()" +
     ")";
 
-    db.query(sqlquery, (err, result) => {
+    db.query(sqlquery, (err) => {
         if (err) {
             console.error(err.message);
         } else {
-            res.render("registersuccess.ejs", data);
+            res.render("success.ejs", data);
         }
     });
 });
@@ -220,7 +267,6 @@ app.get("/topics", function(req, res) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result});
-            console.log(data);
             res.render("index/index.ejs", data);
         }
     });
@@ -258,15 +304,21 @@ app.get("/user/:username", function(req, res) {
                 if (err) {
                     console.error(err.message);
                 } else {
-                    let result = {
-                        posts: postsresult,
-                        userName: usersresult[0].userName,
-                        userDescription: usersresult[0].userDescription,
-                        userCreationDate: usersresult[0].userCreationDate,
-                    }
-                    data = Object.assign({}, data, {result: result});
-                    console.log(data.result.posts)
-                    res.render("profiles/user.ejs", data)
+                    db.query("SELECT * FROM memberships WHERE userName = '" + req.params.username + "'", (err, membershipsresult) => {
+                        if (err) {
+                            console.error(err.message);
+                        } else {
+                            let result = {
+                                posts: postsresult,
+                                memberships: membershipsresult,
+                                userName: usersresult[0].userName,
+                                userDescription: usersresult[0].userDescription,
+                                userCreationDate: usersresult[0].userCreationDate,
+                            }
+                            data = Object.assign({}, data, {result: result});
+                            res.render("profiles/user.ejs", data)
+                        }
+                    });
                 }
             });
         }
@@ -274,11 +326,11 @@ app.get("/user/:username", function(req, res) {
 });
 
 app.get("/topic/:topicname", function(req, res) {
-    db.query("SELECT * FROM topics WHERE topicName LIKE '" + req.params.topicname + "'", (err, result) => {
+    db.query("SELECT * FROM topics INNER JOIN posts WHERE posts.topicName = '" + req.params.topicname + "'", (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result[0]});
+            data = Object.assign({}, data, {result:result}, alreadyfailed = false);
             res.render("profiles/topic.ejs", data);
         }
     });

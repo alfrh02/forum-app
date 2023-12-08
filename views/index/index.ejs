@@ -10,20 +10,20 @@
             <input type="text" id="search" name="search"/>
 
             <label for="posts">posts</label>
-            <input type="radio" id="posts" name="posts" value="posts"/>
+            <input type="radio" id="posts" name="radio" value="posts"/>
             <label for="topics">topics</label>
-            <input type="radio" id="topics" name="topics" value="topics"/>
+            <input type="radio" id="topics" name="radio" value="topics"/>
             <label for="users">users</label>
-            <input type="radio" id="users" name="users" value="users"/>
+            <input type="radio" id="users" name="radio" value="users"/>
 
             <input type="submit" value="Search"/>
         </form>
-        <% if (result[0].userName != undefined) { %>
+        <% if (result[0].postName != undefined) { %>
             <!-- POSTS -->
             <% for (let i = 0; i < result.length; i++) { %>
                 <div>
                     <a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"> <%=result[i].postName%></a>
-                    <a href="/user/<%=result[i].userName%>"> by <%=result[i].userName%></a>, <%=result[i].postCreationDate%>
+                    by <a href="/user/<%=result[i].userName%>"><%=result[i].userName%></a>, <%=result[i].postCreationDate%>
                 </div>
             <% } %>
         <% } else if (result[0].topicName != undefined) { %>

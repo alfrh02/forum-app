@@ -7,9 +7,18 @@
     <body>
         <a href="/">Homepage</a>
         <h1><%=result.userName%></h1>
+        <h3>Posts</h3>
         <% for (let i = 0; i < result.posts.length; i++) { %>
+            <% let post = result.posts[i] %>
             <div>
-                <a href="/topic/<%=result.posts[i].topicName%>/<%=result.posts[i].postId%>"><%=result.posts[i].postName%></a>
+                <a href="/topic/<%=post.topicName%>/<%=post.postId%>"><%=post.postName%></a>
+            </div>
+        <% } %>
+        <h3>Memberships</h3>
+        <% for (let i = 0; i < result.memberships.length; i++) { %>
+            <% let membership = result.memberships[i] %>
+            <div>
+                <a href="/topic/<%=membership.topicName%>"><%=membership.topicName%></a>
             </div>
         <% } %>
     </body>

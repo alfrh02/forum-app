@@ -41,12 +41,12 @@ Start the server by running `node index.js`.
 - [x] Topic search functionality
 - [x] Registering
 - [x] Create topic page
+- [ ] Add a 'Join Topic' button
 - [ ] Login/logout
 - [ ] Ability to delete posts
 - [ ] Admin perms
 - [ ] Comments/replies
 - [ ] Styling/front-end design
     - [ ] Colour scheme
-- [ ] Post tagging
 - [ ] User/topic profile pictures
-- [ ] Markdown support
+- [ ] Render posts with markdown

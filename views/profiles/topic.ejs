@@ -2,15 +2,29 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: <%=result.topicName%></title>
+        <title><%=siteName%>: <%=result[0].topicName%></title>
     </head>
     <body>
         <a href="/">Homepage</a>
-        <h1><%=result.topicName%></h1>
-        <ul>
-        <!-- <% for (let i = 1; i < result.length - 1; i++) { %>
-            <li><a href="/topic/<%=result[0].topicName%>/<%=result[i].postId%>"><%=result[i].postName%></a></li>
-        <% } %> -->
-        </ul>
+        <h1><%=result[0].topicName%></h1>
+        <form method="POST" action="/jointopic/<%=result[0].topicName%>">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"/>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"/>
+
+            <input type="submit" value="Join topic"/>
+        </form>
+        <% if (alreadyfailed == true) { %>
+            <p>Your credentials are incorrect or you are already a member of this topic.</p>
+        <% } %>
+        <div>
+            <h3>Posts</h3>
+            <ul>
+                <% for (let i = 0; i < result.length; i++) { %>
+                    <li><a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"><%=result[i].postName%></a></li>
+                <% } %>
+            </ul>
+        </div>
     </body>
 </html>

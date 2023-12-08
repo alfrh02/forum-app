@@ -9,18 +9,18 @@
         <% if (alreadyfailed == true) { %>
             <form method="POST" action=/postsubmitted>
                 <label for="posttitle">Title:</label>
-                <input type="text" id="posttitle" value="<%=previouspost.posttitle%>"name="posttitle"/>
+                <input type="text" id="posttitle" value="<%=previous.posttitle%>"name="posttitle"/>
 
-                <input type="text" id="postbody" name="postbody" value="<%=previouspost.postbody%>"/>
+                <input type="text" id="postbody" name="postbody" value="<%=previous.postbody%>"/>
 
                 <label for="topic">Topic:</label>
-                <input type="text" id="topic" name="topic" value="<%=previouspost.topic%>" />
+                <input type="text" id="topic" name="topic" value="<%=previous.topic%>" />
 
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<%=previouspost.username%>"/>
+                <input type="text" id="username" name="username" value="<%=previous.username%>"/>
 
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="<%=previouspost.password%>"/>
+                <input type="password" id="password" name="password" value="<%=previous.password%>"/>
 
                 <input type="submit" value="Submit"/>
             </form>
