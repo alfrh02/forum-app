@@ -40,6 +40,7 @@ Start the server by running `node index.js`.
 - [x] Post search functionality
 - [x] Topic search functionality
 - [x] Registering
+- [x] Create topic page
 - [ ] Login/logout
 - [ ] Ability to delete posts
 - [ ] Admin perms
@@ -47,4 +48,5 @@ Start the server by running `node index.js`.
 - [ ] Styling/front-end design
     - [ ] Colour scheme
 - [ ] Post tagging
+- [ ] User/topic profile pictures
 - [ ] Markdown support

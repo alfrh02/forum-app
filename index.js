@@ -69,7 +69,6 @@ app.get("/newpost", function(req, res) {
 });
 
 app.post("/postsubmitted", function(req, res) {
-    console.log(req.body);
     let incorrectCredentials = false;
 
     // check if username and password are correct
@@ -100,7 +99,7 @@ app.post("/postsubmitted", function(req, res) {
         }
     });
 
-    if (!incorrectCredentials) {
+    if (incorrectCredentials) {
         data = Object.assign({}, data, alreadyfailed = true, {previouspost:req.body})
         res.render("newpost.ejs", data);
         return;
@@ -123,6 +122,56 @@ app.post("/postsubmitted", function(req, res) {
         }
     });
 });
+
+app.get("/newtopic", function(req, res) {
+    data = Object.assign({}, data, alreadyfailed = false);
+    res.render("newtopic.ejs", data);
+});
+
+app.post("/topicsubmitted", function(req, res) {
+    console.log(req.body);
+    let incorrectCredentials = false;
+
+    // check if username and password are correct
+    db.query("SELECT userName FROM users WHERE userPassword = '" + req.body.password + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            console.log(result);
+            if (result[0] == undefined) { // password does not correlate to any account
+                incorrectCredentials = true;
+                return;
+            }
+            if (result[0].userName != req.body.username || result[0].userName != "alfred") { // incorrect password-username combination, or not admin
+                incorrectCredentials = true;
+                return;
+            }
+        }
+    });
+
+    console.log(incorrectCredentials);
+    if (incorrectCredentials) {
+        data = Object.assign({}, data, alreadyfailed = true, {previouspost:req.body})
+        res.render("newpost.ejs", data);
+        return;
+    }
+
+    let sqlquery = "INSERT INTO topics (topicName, topicDescription, topicCreationDate)VALUES(" +
+        "'" + req.body.topicname + "', " +
+        "'" + req.body.topicdescription + "', " +
+        "NOW()" +
+    ")";
+
+    db.query(sqlquery, (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.redirect("/topics")
+        }
+    });
+});
+
 
 app.get("/register", function (req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
