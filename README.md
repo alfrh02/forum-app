@@ -24,16 +24,6 @@ Start the server by running `node index.js`.
 
 ---
 
-### Logic
-
-Users, topics, and posts each have a userId, topicId, and postId respectively. These are integers with automatic incrementation.
-
-Users & topics are only identified internally via their IDs. As topic & user names are unique, they are used in URLs for increased readability to the end user.
-
-Posts are identified internally and externally through their IDs, meaning that their IDs are used for the URL, as post titles are not supposed to be unique.
-
----
-
 ### TODO
 
 - [x] Topic index page
@@ -48,9 +38,8 @@ Posts are identified internally and externally through their IDs, meaning that t
 - [x] Put topic name in post URL
 - [x] User search functionality
 - [x] Post search functionality
-    - There probably won't be enough topics to warrant a search function for it.
-    - [x] There's a topic search function anyway 
-- [ ] Register
+- [x] Topic search functionality
+- [ ] Registering
 - [ ] Login/logout
 - [ ] Ability to delete posts
 - [ ] Admin perms
@@ -58,3 +47,4 @@ Posts are identified internally and externally through their IDs, meaning that t
 - [ ] Styling/front-end design
     - [ ] Colour scheme
 - [ ] Post tagging
+- [ ] Markdown support
