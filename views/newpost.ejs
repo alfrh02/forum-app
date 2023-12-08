@@ -6,10 +6,43 @@
     </head>
     <body>
         <a href="/">Homepage</a>
-        <form method="POST" action=/postsubmitted>
-            <input type="text" id="posttitle" name="posttitle" value="Title"/>
-            <input type="text" id="postbody" name="postbody" value="Body"/>
-            <input type="submit" value="Submit"/>
-        </form>
+        <% if (alreadyfailed == true) { %>
+            <form method="POST" action=/postsubmitted>
+                <label for="posttitle">Title:</label>
+                <input type="text" id="posttitle" value="<%=previouspost.posttitle%>"name="posttitle"/>
+
+                <input type="text" id="postbody" name="postbody" value="<%=previouspost.postbody%>"/>
+
+                <label for="topic">Topic:</label>
+                <input type="text" id="topic" name="topic" value="<%=previouspost.topic%>" />
+
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="<%=previouspost.username%>"/>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value="<%=previouspost.password%>"/>
+
+                <input type="submit" value="Submit"/>
+            </form>
+            One of your credentials is incorrect, or you are not a member of the topic you are trying to post to.
+        <% } else { %>
+            <form method="POST" action=/postsubmitted>
+                <label for="posttitle">Title:</label>
+                <input type="text" id="posttitle" name="posttitle"/>
+
+                <input type="text" id="postbody" name="postbody"/>
+
+                <label for="topic">Topic:</label>
+                <input type="text" id="topic" name="topic"/>
+
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"/>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"/>
+
+                <input type="submit" value="Submit"/>
+            </form>
+        <% } %>
     </body>
 </html>

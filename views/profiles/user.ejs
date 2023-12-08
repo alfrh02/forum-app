@@ -7,5 +7,10 @@
     <body>
         <a href="/">Homepage</a>
         <h1><%=result.userName%></h1>
+        <% for (let i = 0; i < result.posts.length; i++) { %>
+            <div>
+                <a href="/topic/<%=result.posts[i].topicName%>/<%=result.posts[i].postId%>"><%=result.posts[i].postName%></a>
+            </div>
+        <% } %>
     </body>
 </html>

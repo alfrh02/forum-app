@@ -30,6 +30,8 @@ app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to
 // Profiles can use multiple rows of data, but fundamentally rely on one row of data. For instance, a user profile relies on one row of data from the `users` table, but may
 // query for all of their posts & memberships.
 
+// Where SQL queries are long, the `sqlquery` variable will be declared for readability.
+
 // --------------------------------------------------------- misc
 app.get("/", function(req, res) {
     res.render("homepage.ejs", data);
@@ -40,13 +42,51 @@ app.get("/about", function(req, res) {
 });
 
 app.get("/newpost", function(req, res) {
+    data = Object.assign({}, data, alreadyfailed = false);
     res.render("newpost.ejs", data);
 });
 
 app.post("/postsubmitted", function(req, res) {
-    let sqlquery = "INSERT INTO posts (userId, topicId, postName, postBody, postCreationDate)VALUES(" +
-        1 + ", " +
-        1 + ", " +
+    console.log(req.body);
+    let incorrectCredentials = false;
+
+    // check if username and password are correct
+    db.query("SELECT userName FROM users WHERE userPassword = '" + req.body.password + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            if (result[0] == undefined) { // password does not correlate to any account
+                incorrectCredentials = true;
+                return;
+            }
+            if (result[0].userName != req.body.username) { // incorrect password-username combination
+                incorrectCredentials = true;
+                return;
+            }
+        }
+    });
+
+    // check if the user is a member of the topic they are posting to
+    db.query("SELECT userName FROM memberships WHERE userName = '" + req.body.username + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            if (result[0] == undefined) { // user is not part of the topic, and cannot post
+                incorrectCredentials = true;
+                return;
+            }
+        }
+    });
+
+    if (!incorrectCredentials) {
+        data = Object.assign({}, data, alreadyfailed = true, {previouspost:req.body})
+        res.render("newpost.ejs", data);
+        return;
+    }
+
+    let sqlquery = "INSERT INTO posts (userName, topicName, postName, postBody, postCreationDate)VALUES(" +
+        "'" + req.body.username + "', " +
+        "'" + req.body.topic + "', " +
         "'" + req.body.posttitle + "', " +
         "'" + req.body.postbody + "', " +
         "NOW()" +
@@ -57,24 +97,54 @@ app.post("/postsubmitted", function(req, res) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result});
+            res.redirect("/posts")
         }
     });
 });
 
-app.post("/searchresult/:table", function(req, res) {
-    db.query("SELECT * FROM " + req.params.table + "s" + " WHERE " + req.params.table + " name LIKE '%" + req.body.search + "%'", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("searchresult.ejs", data);
-        }
-    })
+app.post("/searchresult", async function(req, res) {
+    console.log(req.body);
+
+    // posts
+    // postid
+    // postname
+    // post creation date
+    // post description..?
+
+    // users
+    // username
+    // user description
+    // user creation date
+
+    // topics
+    // topic name
+    // topic description
+    // topic creation date
+
+    let query = function(query, table) {
+        db.query("SELECT " + query + " FROM " + table, (err, result) => {
+            if (err) {
+                console.error(err.message);
+            } else {
+                data = Object.assign({}, data, {result:result});
+                console.log(data);
+                res.render("index.ejs", data);
+            }
+        });
+    }
+
+    if (req.body.posts != undefined) {
+        query("*", "posts");
+    } else if (req.body.topics != undefined) {
+        query("*", "posts");
+    } else if (req.body.users != undefined) {
+        query("userName, userDescription, userCreationDate", "users");
+    }
 });
 
 // ------------------------------------------------------ indexes
 app.get("/posts", function(req, res) {
-    db.query("SELECT * FROM posts INNER JOIN topics ON posts.topicName = topics.topicName", (err, result) => {
+    db.query("SELECT * FROM posts", (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
@@ -90,6 +160,7 @@ app.get("/topics", function(req, res) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result});
+            console.log(data);
             res.render("index/index.ejs", data);
         }
     });
@@ -100,7 +171,7 @@ app.get("/users", function(req, res) {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result}); // append query result to data
+            data = Object.assign({}, data, {result:result});
             res.render("index/index.ejs", data);
         }
     });
@@ -119,14 +190,27 @@ app.get("/topic/:topicname/:postid", function(req, res) {
 });
 
 app.get("/user/:username", function(req, res) {
-    db.query("SELECT * FROM users WHERE userName LIKE '" + req.params.username + "'", (err, result) => {
+    db.query("SELECT userName, userDescription, userCreationDate FROM users WHERE userName = '" + req.params.username + "'", (err, usersresult) => {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result[0]});
-            res.render("profiles/user.ejs", data)
+            db.query("SELECT * FROM posts WHERE userName = '" + req.params.username + "'", (err, postsresult) => {
+                if (err) {
+                    console.error(err.message);
+                } else {
+                    let result = {
+                        posts: postsresult,
+                        userName: usersresult[0].userName,
+                        userDescription: usersresult[0].userDescription,
+                        userCreationDate: usersresult[0].userCreationDate,
+                    }
+                    data = Object.assign({}, data, {result: result});
+                    console.log(data.result.posts)
+                    res.render("profiles/user.ejs", data)
+                }
+            });
         }
-    } )
+    });
 });
 
 app.get("/topic/:topicname", function(req, res) {
@@ -134,7 +218,7 @@ app.get("/topic/:topicname", function(req, res) {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result[0]}); // append the second query to data as "result"
+            data = Object.assign({}, data, {result:result[0]});
             res.render("profiles/topic.ejs", data);
         }
     });

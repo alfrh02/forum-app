@@ -8,9 +8,14 @@
         <a href="/">Homepage</a>
         <form method="POST" action="/searchresult">
             <input type="text" id="search" name="search"/>
-            <input type="checkbox" id="users" name="users"/>
-            <input type="checkbox" id="posts" name="posts"/>
-            <input type="checkbox" id="topics" name="topics"/>
+
+            <label for="posts">posts</label>
+            <input type="radio" id="posts" name="posts" value="posts"/>
+            <label for="topics">topics</label>
+            <input type="radio" id="topics" name="topics" value="topics"/>
+            <label for="users">users</label>
+            <input type="radio" id="users" name="users" value="users"/>
+
             <input type="submit" value="Search"/>
         </form>
         <% if (result[0].userName != undefined) { %>

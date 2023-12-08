@@ -42,14 +42,14 @@ Posts are identified internally and externally through their IDs, meaning that t
 - [x] Post index page
 - [x] Set up SQL database & scripts
 - [x] Post submission page
-    - [ ] Check for topic membership
-- [ ] FIX : change membership columns to utilise user & topic names instead of IDs
-    - [ ] Make user & topic names their primary keys?
-- [ ] Put topic name in post URL
-- [ ] Change primary keys to names instead of IDs
+    - [x] Check for topic membership
+- [x] FIX : change membership columns to utilise user & topic names instead of IDs
+    - [x] Make user & topic names their primary keys?
+- [x] Put topic name in post URL
 - [x] User search functionality
 - [x] Post search functionality
     - There probably won't be enough topics to warrant a search function for it.
+    - [x] There's a topic search function anyway 
 - [ ] Register
 - [ ] Login/logout
 - [ ] Ability to delete posts
