@@ -16,12 +16,13 @@
                 <label for="topic">Topic:</label>
                 <input type="text" id="topic" name="topic" value="<%=previous.topic%>" />
 
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<%=previous.username%>"/>
+                <div id="credentials">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<%=previous.username%>"/>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="<%=previous.password%>"/>
-
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" value="<%=previous.password%>"/>
+                </div>
                 <input type="submit" value="Submit"/>
             </form>
             One of your credentials is incorrect, or you are not a member of the topic you are trying to post to.
@@ -35,12 +36,13 @@
                 <label for="topic">Topic:</label>
                 <input type="text" id="topic" name="topic"/>
 
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username"/>
+                <div id="credentials">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username"/>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password"/>
-
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password"/>
+                </div>
                 <input type="submit" value="Submit"/>
             </form>
         <% } %>

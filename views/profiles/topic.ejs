@@ -7,14 +7,16 @@
     <body>
         <a href="/">Homepage</a>
         <h1><%=result[0].topicName%></h1>
-        <form method="POST" action="/jointopic/<%=result[0].topicName%>">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"/>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password"/>
+        <div id="credentials">
+            <form method="POST" action="/jointopic/<%=result[0].topicName%>">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"/>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"/>
 
-            <input type="submit" value="Join topic"/>
-        </form>
+                <input type="submit" value="Join topic"/>
+            </form>
+        </div>
         <% if (alreadyfailed == true) { %>
             <p>Your credentials are incorrect or you are already a member of this topic.</p>
         <% } %>

@@ -139,7 +139,7 @@ app.post("/topicsubmitted", function(req, res) {
                 incorrectCredentials = true;
                 return;
             }
-            if (result[0].userName != req.body.username || result[0].userName != "alfred") { // incorrect password-username combination, or not admin
+            if (result[0].userName != req.body.username || result[0].userName != "admin") { // incorrect password-username combination, or not admin
                 incorrectCredentials = true;
                 return;
             }
@@ -180,7 +180,7 @@ app.post("/jointopic/:topicname", function(req, res) {
                 incorrectCredentials = true;
                 return;
             }
-            if (result[0].userName != req.body.username || result[0].userName != "alfred") { // incorrect password-username combination, or not admin
+            if (result[0].userName != req.body.username || result[0].userName != "admin") { // incorrect password-username combination, or not admin
                 incorrectCredentials = true;
                 return;
             }
