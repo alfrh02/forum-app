@@ -42,6 +42,11 @@ Start the server by running `node index.js`.
 - [x] Registering
 - [x] Create topic page
 - [x] Add a 'Join Topic' button
+
+---
+
+##### Extensions
+
 - [ ] Login/logout
 - [ ] Ability to delete posts
 - [x] Admin perms - currently hardcoded only for user 'admin'

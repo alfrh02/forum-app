@@ -42,29 +42,43 @@ app.get("/about", function(req, res) {
 });
 
 app.post("/searchresult", async function(req, res) {
-    let query = function(query, table) {
-        db.query("SELECT " + query + " FROM " + table, (err, result) => {
-            if (err) {
-                console.error(err.message);
-            } else {
-                data = Object.assign({}, data, {result:result});
-                res.render("index.ejs", data);
-            }
-        });
-    }
+    db.query("SELECT " + req.body.search + " FROM " + req.body.radio, (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            console.log("test");
+            res.render("index/index.ejs", data);
+        }
+    })
+});
+// ------------------------------------------------------ posts
+app.get("/posts", function(req, res) {
+    db.query("SELECT * FROM posts", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("posts/posts.ejs", data);
+        }
+    })
+});
 
-    if (req.body.posts != undefined) {
-        query("*", "posts");
-    } else if (req.body.topics != undefined) {
-        query("*", "posts");
-    } else if (req.body.users != undefined) {
-        query("userName, userDescription, userCreationDate", "users");
-    }
+app.get("/topic/:topicname/:postid", function(req, res) {
+    console.log(req.params)
+    db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result[0]});
+            res.render("posts/post.ejs", data);
+        }
+    })
 });
 
 app.get("/newpost", function(req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
-    res.render("newpost.ejs", data);
+    res.render("posts/newpost.ejs", data);
 });
 
 app.post("/postsubmitted", function(req, res) {
@@ -100,7 +114,7 @@ app.post("/postsubmitted", function(req, res) {
 
     if (incorrectCredentials) {
         data = Object.assign({}, data, alreadyfailed = true, {previous:req.body})
-        res.render("newpost.ejs", data);
+        res.render("posts/newpost.ejs", data);
         return;
     }
 
@@ -121,10 +135,32 @@ app.post("/postsubmitted", function(req, res) {
         }
     });
 });
+// ----------------------------------------------------- topics
+app.get("/topics", function(req, res) {
+    db.query("SELECT * FROM topics", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("topics/topics.ejs", data);
+        }
+    });
+});
+
+app.get("/topic/:topicname", function(req, res) {
+    db.query("SELECT * FROM topics INNER JOIN posts WHERE posts.topicName = '" + req.params.topicname + "'", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result}, alreadyfailed = false);
+            res.render("topics/topic.ejs", data);
+        }
+    });
+});
 
 app.get("/newtopic", function(req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
-    res.render("newtopic.ejs", data);
+    res.render("topics/newtopic.ejs", data);
 });
 
 app.post("/topicsubmitted", function(req, res) {
@@ -221,6 +257,48 @@ app.post("/jointopic/:topicname", function(req, res) {
     })
 })
 
+// ------------------------------------------------------ users
+app.get("/users", function(req, res) {
+    db.query("SELECT * FROM users", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result});
+            res.render("users/users.ejs", data);
+        }
+    });
+});
+
+app.get("/user/:username", function(req, res) {
+    db.query("SELECT userName, userDescription, userCreationDate FROM users WHERE userName = '" + req.params.username + "'", (err, usersresult) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            db.query("SELECT * FROM posts WHERE userName = '" + req.params.username + "'", (err, postsresult) => {
+                if (err) {
+                    console.error(err.message);
+                } else {
+                    db.query("SELECT * FROM memberships WHERE userName = '" + req.params.username + "'", (err, membershipsresult) => {
+                        if (err) {
+                            console.error(err.message);
+                        } else {
+                            let result = {
+                                posts: postsresult,
+                                memberships: membershipsresult,
+                                userName: usersresult[0].userName,
+                                userDescription: usersresult[0].userDescription,
+                                userCreationDate: usersresult[0].userCreationDate,
+                            }
+                            data = Object.assign({}, data, {result: result});
+                            res.render("users/user.ejs", data)
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
 app.get("/register", function (req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
     res.render("register.ejs", data);
@@ -249,91 +327,5 @@ app.post("/registered", function(req, res) {
     });
 });
 
-// ------------------------------------------------------ indexes
-app.get("/posts", function(req, res) {
-    db.query("SELECT * FROM posts", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("index/index.ejs", data);
-        }
-    })
-});
-
-app.get("/topics", function(req, res) {
-    db.query("SELECT * FROM topics", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("index/index.ejs", data);
-        }
-    });
-});
-
-app.get("/users", function(req, res) {
-    db.query("SELECT * FROM users", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result});
-            res.render("index/index.ejs", data);
-        }
-    });
-});
-
-// ---------------------------------------------------- profiles
-app.get("/topic/:topicname/:postid", function(req, res) {
-    db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result[0]});
-            res.render("profiles/post.ejs", data);
-        }
-    })
-});
-
-app.get("/user/:username", function(req, res) {
-    db.query("SELECT userName, userDescription, userCreationDate FROM users WHERE userName = '" + req.params.username + "'", (err, usersresult) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            db.query("SELECT * FROM posts WHERE userName = '" + req.params.username + "'", (err, postsresult) => {
-                if (err) {
-                    console.error(err.message);
-                } else {
-                    db.query("SELECT * FROM memberships WHERE userName = '" + req.params.username + "'", (err, membershipsresult) => {
-                        if (err) {
-                            console.error(err.message);
-                        } else {
-                            let result = {
-                                posts: postsresult,
-                                memberships: membershipsresult,
-                                userName: usersresult[0].userName,
-                                userDescription: usersresult[0].userDescription,
-                                userCreationDate: usersresult[0].userCreationDate,
-                            }
-                            data = Object.assign({}, data, {result: result});
-                            res.render("profiles/user.ejs", data)
-                        }
-                    });
-                }
-            });
-        }
-    });
-});
-
-app.get("/topic/:topicname", function(req, res) {
-    db.query("SELECT * FROM topics INNER JOIN posts WHERE posts.topicName = '" + req.params.topicname + "'", (err, result) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            data = Object.assign({}, data, {result:result}, alreadyfailed = false);
-            res.render("profiles/topic.ejs", data);
-        }
-    });
-});
 
 app.listen(port); // start site
