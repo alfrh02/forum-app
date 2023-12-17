@@ -2,37 +2,35 @@ CREATE DATABASE forum;
 USE forum;
 
 CREATE TABLE users (
-    userId INT PRIMARY KEY AUTO_INCREMENT,
-    userName VARCHAR(32) UNIQUE,
+    userName VARCHAR(32) PRIMARY KEY,
     userPassword VARCHAR(256) NOT NULL,
     userDescription VARCHAR(256),
     userCreationDate DATE
 );
 
 CREATE TABLE topics (
-    topicId INT PRIMARY KEY AUTO_INCREMENT,
-    topicName VARCHAR(32),
+    topicName VARCHAR(32) PRIMARY KEY,
     topicDescription VARCHAR(256),
     topicCreationDate DATE
 );
 
 CREATE TABLE memberships (
-    userId INT,
-    topicId INT,
+    userName VARCHAR(32),
+    topicName VARCHAR(32),
     joinDate DATE,
-    FOREIGN KEY(userId) REFERENCES users(userId),
-    FOREIGN KEY(topicId) REFERENCES topics(topicId)
+    FOREIGN KEY(userName) REFERENCES users(userName),
+    FOREIGN KEY(topicName) REFERENCES topics(topicName)
 );
 
 CREATE TABLE posts (
     postId INT PRIMARY KEY AUTO_INCREMENT,
-    userId INT,
-    topicId INT,
     postName VARCHAR(64),
     postBody TEXT,
     postCreationDate DATE,
-    FOREIGN KEY(userId) REFERENCES users(userId),
-    FOREIGN KEY(topicId) REFERENCES topics(topicId)
+    userName VARCHAR(32),
+    topicName VARCHAR(32),
+    FOREIGN KEY(userName) REFERENCES users(userName),
+    FOREIGN KEY(topicName) REFERENCES topics(topicName)
 );
 
 CREATE USER "appuser"@"localhost" IDENTIFIED WITH mysql_native_password BY "forumapp";
