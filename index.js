@@ -16,7 +16,7 @@ const db = mysql.createConnection({ // connect to database
 })
 
 let data = { // data for each site to have access to
-    siteName: "Alforum",
+    siteName: "Alforum"
 }
 
 app.set("views", __dirname + "/views");          // set the views directory for express to pick up files from
@@ -24,13 +24,6 @@ app.set("view engine", "ejs");                   // set EJS as our views engine
 app.engine("html", ejs.renderFile);              // tell express to use EJS to render HTML files
 app.use(express.static(__dirname + "/public"));  // tell express to use the `public/` folder for files to serve to the client (such as css)
 app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to req.body for form submissions
-
-// Internally sites are either "profiles" or "indexes". All indexes are rendered through `index.ejs`.
-// Indexes use multiple rows of data - the users, topics, or posts pages.
-// Profiles can use multiple rows of data, but fundamentally rely on one row of data. For instance, a user profile relies on one row of data from the `users` table, but may
-// query for all of their posts & memberships.
-
-// Where SQL queries are long, the `sqlquery` variable will be declared for readability.
 
 // --------------------------------------------------------- misc
 app.get("/", function(req, res) {
@@ -41,14 +34,43 @@ app.get("/about", function(req, res) {
     res.render("about.ejs", data);
 });
 
-app.post("/searchresult", async function(req, res) {
-    db.query("SELECT " + req.body.search + " FROM " + req.body.radio, (err, result) => {
+app.post("/searchresult", function(req, res) {
+    let values = [];
+    let query = "";
+
+    if (req.body.radio != undefined) {
+        if (req.body.radio == "users") {
+            values.push("userName, userCreationDate");
+        } else {
+            values.push("*");
+        }
+        values.push(req.body.radio)
+
+        query += "SELECT " + values[0] + " FROM " + values[1]
+    }
+
+    if (req.body.search != undefined) {
+        if (req.body.radio == "users") {
+            values.push("userName");
+        } else if (req.body.radio == "posts") {
+            values.push("postName");
+        } else {
+            values.push("topicName");
+        }
+        values.push(req.body.search)
+
+        query += " WHERE " + values[2] + " = '%" + req.body.search + "%'";
+     }
+
+
+    console.log(query)
+    db.query(query, values, (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result});
-            console.log("test");
-            res.render("index/index.ejs", data);
+            data = Object.assign({}, data, {result:result}, {option:req.body.radio});
+            console.log(data)
+            res.render("search/index.ejs", data);
         }
     })
 });
@@ -148,11 +170,12 @@ app.get("/topics", function(req, res) {
 });
 
 app.get("/topic/:topicname", function(req, res) {
-    db.query("SELECT * FROM topics INNER JOIN posts WHERE posts.topicName = '" + req.params.topicname + "'", (err, result) => {
+    db.query("SELECT * FROM topics LEFT OUTER JOIN posts ON posts.topicName = '" + req.params.topicname + "'", (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result}, alreadyfailed = false);
+            console.log(data)
             res.render("topics/topic.ejs", data);
         }
     });
@@ -326,6 +349,5 @@ app.post("/registered", function(req, res) {
         }
     });
 });
-
 
 app.listen(port); // start site

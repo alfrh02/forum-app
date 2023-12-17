@@ -6,22 +6,26 @@
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
-        <form method="POST" action="/searchresult">
-            <input type="text" id="search" name="search"/>
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+            </div>
+            <form method="POST" action="/searchresult">
+                <input type="text" id="search" name="search"/>
 
-            <label for="posts">posts</label>
-            <input type="radio" id="posts" name="radio" value="posts"/>
-            <label for="topics">topics</label>
-            <input type="radio" id="topics" name="radio" value="topics"/>
-            <label for="users">users</label>
-            <input type="radio" id="users" name="radio" value="users"/>
+                <label for="posts">posts</label>
+                <input type="radio" id="posts" name="radio" value="posts"/>
+                <label for="topics">topics</label>
+                <input type="radio" id="topics" name="radio" value="topics"/>
+                <label for="users">users</label>
+                <input type="radio" id="users" name="radio" value="users"/>
 
-            <input type="submit" value="Search"/>
-        </form>
+                <input type="submit" value="Search"/>
+            </form>
+        </nav>
         <h3>Users</h3>
         <% for (let i = 0; i < result.length; i++) { %>
-            <div>
+            <div class="index_result">
                 <a href="/user/<%=result[i].userName%>"> <%=result[i].userName%>, <%=result[i].userCreationDate%></a>
             </div>
         <% } %>

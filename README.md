@@ -1,6 +1,6 @@
-This project has been made using Node.js, Express.js, EJS, & MySQL.
+This website has been made using Node.js, EJS, Express.js and MySQL.
 
-To run this application locally, make sure you have MySQL, Node.js, and NPM installed.
+To run this application locally, make sure you have MySQL, Node.js, and NPM installed on your machine.
 
 ### Setup
 

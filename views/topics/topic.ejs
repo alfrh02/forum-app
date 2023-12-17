@@ -3,31 +3,54 @@
     <head>
         <meta charset UTF-8>
         <title><%=siteName%>: <%=result[0].topicName%></title>
+        <script src="/style-logic.js"></script>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
-        <h1><%=result[0].topicName%></h1>
-        <div id="credentials">
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+                <input type="button" onclick="showLoginForm()" value="Join topic"/>
+                <% if (alreadyfailed == true) { %>
+                    <p>Your credentials are incorrect or you are already a member of this topic.</p>
+                <% } %>
+                <form method="POST" action="/searchresult">
+                    <input type="text" id="search" name="search"/>
+
+                    <label for="posts">posts</label>
+                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <label for="topics">topics</label>
+                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <label for="users">users</label>
+                    <input type="radio" id="users" name="radio" value="users"/>
+
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+        </nav>
+        <div class="popup" id="credentials">
+            <img src="/icons/close.svg" onclick="hideLoginForm()">
             <form method="POST" action="/jointopic/<%=result[0].topicName%>">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username"/>
+
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password"/>
 
-                <input type="submit" value="Join topic"/>
+                <input class="button" type="submit" value="Join topic"/>
             </form>
         </div>
-        <% if (alreadyfailed == true) { %>
-            <p>Your credentials are incorrect or you are already a member of this topic.</p>
-        <% } %>
+        <h1><%=result[0].topicName%></h1>
         <div>
             <h3>Posts</h3>
-            <ul>
-                <% for (let i = 0; i < result.length; i++) { %>
-                    <li><a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"><%=result[i].postName%></a></li>
+            <% for (let i = 0; i < result.length; i++) { %>
+                <% if (result[i].postId != null) { %>
+                    <div class="index-item">
+                        <a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"> <%=result[i].postName%></a> : <a href="/user/<%=result[i].userName%>"><%=result[i].userName%></a>
+                        <p><%=result[i].postBody%></p>
+                    </div>
                 <% } %>
-            </ul>
+            <% } %>
         </div>
     </body>
 </html>

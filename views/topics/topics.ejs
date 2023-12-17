@@ -21,8 +21,9 @@
         </form>
         <h3>Topics</h3>
         <% for (let i = 0; i < result.length; i++) { %>
-            <div>
-                <a href="/topic/<%=result[i].topicName%>"> <%=result[i].topicName%>, <%=result[i].topicCreationDate%></a>
+            <div class="index-item">
+                <a href="/topic/<%=result[i].topicName%>"> <%=result[i].topicName%></a>
+                <p><%=result[i].topicDescription%></p>
             </div>
         <% } %>
     </body>

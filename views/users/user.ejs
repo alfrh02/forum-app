@@ -6,7 +6,15 @@
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+                <input type="button" onclick="showLoginForm()" value="Join topic"/>
+                <% if (alreadyfailed == true) { %>
+                    <p>Your credentials are incorrect or you are already a member of this topic.</p>
+                <% } %>
+            </div>
+        </nav>
         <h1><%=result.userName%></h1>
         <h3>Posts</h3>
         <% for (let i = 0; i < result.posts.length; i++) { %>

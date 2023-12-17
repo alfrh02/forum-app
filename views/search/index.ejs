@@ -19,7 +19,7 @@
 
             <input type="submit" value="Search"/>
         </form>
-        <% if (result[0].postName != undefined) { %>
+        <% if (option == "posts") { %>
             <!-- POSTS -->
             <% for (let i = 0; i < result.length; i++) { %>
                 <div>
@@ -27,7 +27,7 @@
                     by <a href="/user/<%=result[i].userName%>"><%=result[i].userName%></a>, <%=result[i].postCreationDate%>
                 </div>
             <% } %>
-        <% } else if (result[0].topicName != undefined) { %>
+        <% } else if (option == "topics") { %>
             <!-- TOPICS -->
             <% for (let i = 0; i < result.length; i++) { %>
                 <div>

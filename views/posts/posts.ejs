@@ -21,7 +21,7 @@
         </form>
         <h3>Posts</h3>
         <% for (let i = 0; i < result.length; i++) { %>
-            <div>
+            <div class="index_result">
                 <a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"> <%=result[i].postName%></a>
                 by <a href="/user/<%=result[i].userName%>"><%=result[i].userName%></a>, <%=result[i].postCreationDate%>
             </div>

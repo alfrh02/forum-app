@@ -14,13 +14,14 @@
 
                 <input type="text" id="topicdescription" name="topicdescription" value="<%=previous.topicdescription%>"/>
 
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<%=previouspost.username%>"/>
+                <div id="credentials">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<%=previouspost.username%>"/>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="<%=previouspost.password%>"/>
-
-                <input type="submit" value="Submit"/>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" value="<%=previouspost.password%>"/>
+                    <input type="submit" value="Submit"/>
+                </div>
             </form>
             One of your credentials is incorrect, or you are not an admin.
         <% } else { %>
