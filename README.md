@@ -51,8 +51,8 @@ Start the server by running `node index.js`.
 - [ ] Ability to delete posts
 - [x] Admin perms - currently hardcoded only for user 'admin'
 - [ ] Comments/replies
-- [ ] Styling/front-end design
-    - [ ] Colour scheme
-    - [ ] Credentials pop-up
+- [x] Styling/front-end design
+    - [x] Colour scheme
+    - [x] Credentials pop-up
 - [ ] User/topic profile pictures
 - [ ] Render posts with markdown

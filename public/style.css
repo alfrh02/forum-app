@@ -64,3 +64,16 @@ nav label {
     padding: 25px;
     overflow: hidden;
 }
+
+.submit-form form {
+    display: grid;
+    width: 500px;
+}
+
+.submit-form form * :not(.popup) :not(.popup *) {
+    margin-top: 10px;
+}
+
+.submit-form form #topicdescription {
+    height: 250px;
+}

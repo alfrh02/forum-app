@@ -3,20 +3,31 @@
     <head>
         <meta charset UTF-8>
         <title><%=siteName%>: <%=result.postName%></title>
+        <script type="module" src="https://md-block.verou.me/md-block.js"></script>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
         <nav>
             <div class="container">
                 <a href="/">Homepage</a>
-                <input type="button" onclick="showLoginForm()" value="Join topic"/>
-                <% if (alreadyfailed == true) { %>
-                    <p>Your credentials are incorrect or you are already a member of this topic.</p>
-                <% } %>
+                <form method="POST" action="/searchresult">
+                    <input type="text" id="search" name="search"/>
+
+                    <label for="posts">posts</label>
+                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <label for="topics">topics</label>
+                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <label for="users">users</label>
+                    <input type="radio" id="users" name="radio" value="users"/>
+
+                    <input type="submit" value="Search"/>
+                </form>
             </div>
         </nav>
         <h1><%=result.postName%></h1>
         <a href="/user/<%=result.userName%>"><%=result.userName%></a>
-        <p><%=result.postBody%></p>
+        <md-block>
+            <%=result.postBody%>
+        </md-block>
     </body>
 </html>

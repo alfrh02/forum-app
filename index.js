@@ -25,6 +25,12 @@ app.engine("html", ejs.renderFile);              // tell express to use EJS to r
 app.use(express.static(__dirname + "/public"));  // tell express to use the `public/` folder for files to serve to the client (such as css)
 app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to req.body for form submissions
 
+/*
+    NOTES:
+        - when gathering data for users, caution is made to make sure userPassword is not being grabbed for the end user
+
+*/
+
 // --------------------------------------------------------- misc
 app.get("/", function(req, res) {
     res.render("homepage.ejs", data);
@@ -293,33 +299,18 @@ app.get("/users", function(req, res) {
 });
 
 app.get("/user/:username", function(req, res) {
-    db.query("SELECT userName, userDescription, userCreationDate FROM users WHERE userName = '" + req.params.username + "'", (err, usersresult) => {
+    let subquery = "SELECT users.userName, userDescription, userCreationDate, postName, postBody, postId, topicName FROM users LEFT OUTER JOIN posts ON posts.userName = users.userName"
+    let query = "SELECT * FROM (" + subquery + ") AS result WHERE userName = '" + req.params.username + "'"
+
+    db.query(query, (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
-            db.query("SELECT * FROM posts WHERE userName = '" + req.params.username + "'", (err, postsresult) => {
-                if (err) {
-                    console.error(err.message);
-                } else {
-                    db.query("SELECT * FROM memberships WHERE userName = '" + req.params.username + "'", (err, membershipsresult) => {
-                        if (err) {
-                            console.error(err.message);
-                        } else {
-                            let result = {
-                                posts: postsresult,
-                                memberships: membershipsresult,
-                                userName: usersresult[0].userName,
-                                userDescription: usersresult[0].userDescription,
-                                userCreationDate: usersresult[0].userCreationDate,
-                            }
-                            data = Object.assign({}, data, {result: result});
-                            res.render("users/user.ejs", data)
-                        }
-                    });
-                }
-            });
+            data = Object.assign({}, data, {result: result});
+            console.log(data)
+            res.render("users/user.ejs", data)
         }
-    });
+    })
 });
 
 app.get("/register", function (req, res) {

@@ -10,10 +10,10 @@
         <nav>
             <div class="container">
                 <a href="/">Homepage</a>
-                <input type="button" onclick="showLoginForm()" value="Join topic"/>
                 <% if (alreadyfailed == true) { %>
                     <p>Your credentials are incorrect or you are already a member of this topic.</p>
                 <% } %>
+                <input type="button" onclick="showLoginForm()" value="Join topic"/>
                 <form method="POST" action="/searchresult">
                     <input type="text" id="search" name="search"/>
 

@@ -3,49 +3,72 @@
     <head>
         <meta charset UTF-8>
         <title><%=siteName%>: New Post</title>
+        <script src="/style-logic.js"></script>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
-        <% if (alreadyfailed == true) { %>
-            <form method="POST" action=/postsubmitted>
-                <label for="posttitle">Title:</label>
-                <input type="text" id="posttitle" value="<%=previous.posttitle%>"name="posttitle"/>
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+                <form method="POST" action="/searchresult">
+                    <input type="text" id="search" name="search"/>
 
-                <input type="text" id="postbody" name="postbody" value="<%=previous.postbody%>"/>
+                    <label for="posts">posts</label>
+                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <label for="topics">topics</label>
+                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <label for="users">users</label>
+                    <input type="radio" id="users" name="radio" value="users"/>
 
-                <label for="topic">Topic:</label>
-                <input type="text" id="topic" name="topic" value="<%=previous.topic%>" />
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+        </nav>
+        <div class="submit-form">
+            <% if (alreadyfailed == true) { %>
+                <form method="POST" action=/postsubmitted>
+                    <label for="posttitle">Title:</label>
+                    <input type="text" id="posttitle" value="<%=previous.posttitle%>"name="posttitle"/>
 
-                <div id="credentials">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="<%=previous.username%>"/>
+                    <textarea type="text" id="postbody" name="postbody" rows="4" cols="50" value="<%=previous.postbody%>"></textarea>
 
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" value="<%=previous.password%>"/>
-                    <input type="submit" value="Submit"/>
-                </div>
-            </form>
-            One of your credentials is incorrect, or you are not a member of the topic you are trying to post to.
-        <% } else { %>
-            <form method="POST" action=/postsubmitted>
-                <label for="posttitle">Title:</label>
-                <input type="text" id="posttitle" name="posttitle"/>
+                    <label for="topic">Topic:</label>
+                    <input type="text" id="topic" name="topic" value="<%=previous.topic%>" />
 
-                <input type="text" id="postbody" name="postbody"/>
+                    <div class="popup" id="credentials">
+                        <img src="/icons/close.svg" onclick="hideLoginForm()">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" value="<%=previous.username%>"/>
 
-                <label for="topic">Topic:</label>
-                <input type="text" id="topic" name="topic"/>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" value="<%=previous.password%>"/>
+                        <input type="submit" value="Submit"/>
+                    </div>
+                </form>
+                One of your credentials is incorrect, or you are not a member of the topic you are trying to post to.
+            <% } else { %>
+                <form method="POST" action=/postsubmitted>
+                    <label for="posttitle">Title:</label>
+                    <input type="text" id="posttitle" name="posttitle"/>
 
-                <div id="credentials">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username"/>
+                    <textarea type="text" id="postbody" name="postbody" rows="4" cols="50"></textarea>
 
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password"/>
-                </div>
-                <input type="submit" value="Submit"/>
-            </form>
-        <% } %>
+                    <label for="topic">Topic:</label>
+                    <input type="text" id="topic" name="topic"/>
+
+                    <div class="popup" id="credentials">
+                        <img src="/icons/close.svg" onclick="hideLoginForm()">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username"/>
+
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password"/>
+
+                        <input type="submit" value="Submit"/>
+                    </div>
+                </form>
+            <% } %>
+            <input type="button" onclick="showLoginForm()" value="Submit post"/>
+        </div>
     </body>
 </html>

@@ -25,8 +25,8 @@
         </nav>
         <h3>Users</h3>
         <% for (let i = 0; i < result.length; i++) { %>
-            <div class="index_result">
-                <a href="/user/<%=result[i].userName%>"> <%=result[i].userName%>, <%=result[i].userCreationDate%></a>
+            <div class="index-item">
+                <a href="/user/<%=result[i].userName%>"> <%=result[i].userName%></a>, user since <%=result[i].userCreationDate%>
             </div>
         <% } %>
     </body>

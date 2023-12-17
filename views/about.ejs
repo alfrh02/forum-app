@@ -2,11 +2,30 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: About</title>
+        <title><%=siteName%>: Home</title>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
-        Hello World!
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+                <form method="POST" action="/searchresult">
+                    <input type="text" id="search" name="search"/>
+
+                    <label for="posts">posts</label>
+                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <label for="topics">topics</label>
+                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <label for="users">users</label>
+                    <input type="radio" id="users" name="radio" value="users"/>
+
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+        </nav>
+        <h3>About</h3>
+        <p>
+            <em><%=siteName%></em> is a forum for forum users by forum users.
+        </p>
     </body>
 </html>

@@ -2,33 +2,39 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: <%=result.userName%></title>
+        <title><%=siteName%>: <%=result[0].userName%></title>
+        <script src="/style-logic.js"></script>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
         <nav>
             <div class="container">
                 <a href="/">Homepage</a>
-                <input type="button" onclick="showLoginForm()" value="Join topic"/>
-                <% if (alreadyfailed == true) { %>
-                    <p>Your credentials are incorrect or you are already a member of this topic.</p>
-                <% } %>
+                <form method="POST" action="/searchresult">
+                    <input type="text" id="search" name="search"/>
+
+                    <label for="posts">posts</label>
+                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <label for="topics">topics</label>
+                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <label for="users">users</label>
+                    <input type="radio" id="users" name="radio" value="users"/>
+
+                    <input type="submit" value="Search"/>
+                </form>
             </div>
         </nav>
-        <h1><%=result.userName%></h1>
-        <h3>Posts</h3>
-        <% for (let i = 0; i < result.posts.length; i++) { %>
-            <% let post = result.posts[i] %>
-            <div>
-                <a href="/topic/<%=post.topicName%>/<%=post.postId%>"><%=post.postName%></a>
-            </div>
-        <% } %>
-        <h3>Memberships</h3>
-        <% for (let i = 0; i < result.memberships.length; i++) { %>
-            <% let membership = result.memberships[i] %>
-            <div>
-                <a href="/topic/<%=membership.topicName%>"><%=membership.topicName%></a>
-            </div>
-        <% } %>
+        <h1><%=result[0].userName%></h1>
+        <div>
+            <h3>Posts</h3>
+            <% for (let i = 0; i < result.length; i++) { %>
+                <% if (result[i].postId != null) { %>
+                    <div class="index-item">
+                        <a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"> <%=result[i].postName%></a> : <a href="/user/<%=result[i].userName%>"><%=result[i].userName%></a>
+                        <p><%=result[i].postBody%></p>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
     </body>
 </html>

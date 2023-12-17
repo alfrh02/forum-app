@@ -2,38 +2,57 @@
 <html>
     <head>
         <meta charset UTF-8>
-        <title><%=siteName%>: New Post</title>
+        <title><%=siteName%>: Register</title>
+        <script src="/style-logic.js"></script>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
-        <% if (alreadyfailed == true) { %>
-            <form method="POST" action=/registered>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="<%=previous.username%>"/>
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+                <form method="POST" action="/searchresult">
+                    <input type="text" id="search" name="search"/>
 
-                <label for="topic">Password:</label>
-                <input type="password" id="password" name="password" value="<%=previous.password%>"/>
+                    <label for="posts">posts</label>
+                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <label for="topics">topics</label>
+                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <label for="users">users</label>
+                    <input type="radio" id="users" name="radio" value="users"/>
 
-                <label for="topic">Password:</label>
-                <input type="password" id="redo_password" name="redo_password">
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+        </nav>
+        <div class="submit-form">
+            <% if (alreadyfailed == true) { %>
+                <form method="POST" action=/registered>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<%=previous.username%>"/>
 
-                <input type="submit" value="Submit"/>
-            </form>
-            Error.
-        <% } else { %>
-            <form method="POST" action=/registered>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username"/>
+                    <label for="topic">Password:</label>
+                    <input type="password" id="password" name="password" value="<%=previous.password%>"/>
 
-                <label for="topic">Password:</label>
-                <input type="password" id="password" name="password"/>
+                    <label for="topic">Password:</label>
+                    <input type="password" id="redo_password" name="redo_password">
 
-                <label for="topic">Password:</label>
-                <input type="password" id="redo_password" name="redo_password">
+                    <input type="submit" value="Create account"/>
+                </form>
+                Error.
+            <% } else { %>
+                <form method="POST" action=/registered>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username"/>
 
-                <input type="submit" value="Submit"/>
-            </form>
-        <% } %>
+                    <label for="topic">Password:</label>
+                    <input type="password" id="password" name="password"/>
+
+                    <label for="topic">Password:</label>
+                    <input type="password" id="redo_password" name="redo_password">
+
+                    <input type="submit" value="Create account"/>
+                </form>
+            <% } %>
+        </div>
     </body>
 </html>
