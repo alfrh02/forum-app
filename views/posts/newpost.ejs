@@ -14,11 +14,11 @@
                     <input type="text" id="search" name="search"/>
 
                     <label for="posts">posts</label>
-                    <input type="radio" id="posts" name="radio" value="posts"/>
+                    <input type="checkbox" id="posts" name="radio" value="posts"/>
                     <label for="topics">topics</label>
-                    <input type="radio" id="topics" name="radio" value="topics"/>
+                    <input type="checkbox" id="topics" name="radio" value="topics"/>
                     <label for="users">users</label>
-                    <input type="radio" id="users" name="radio" value="users"/>
+                    <input type="checkbox" id="users" name="radio" value="users"/>
 
                     <input type="submit" value="Search"/>
                 </form>
@@ -68,7 +68,16 @@
                     </div>
                 </form>
             <% } %>
-            <input type="button" onclick="showLoginForm()" value="Submit post"/>
+            <input class="show-login-button" type="button" onclick="showLoginForm()" value="Submit post"/>
+            <div class="dropdown" onclick="toggleDropdown()">
+                <button>Available topics</button>
+                <div id="dropdown">
+                    <% for (let i = 0; i < result.length; i++) { %>
+                        <a onclick="setTopic('<%=result[i].topicName%>')"><%=result[i].topicName%></a><br>
+                    <% } %>
+                </div>
+            </div>
+            <p>You must be a member of a topic to be able to post to it. Become a member via the topic's homepage.</p>
         </div>
     </body>
 </html>

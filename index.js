@@ -25,12 +25,6 @@ app.engine("html", ejs.renderFile);              // tell express to use EJS to r
 app.use(express.static(__dirname + "/public"));  // tell express to use the `public/` folder for files to serve to the client (such as css)
 app.use(bodyParser.urlencoded({extended: true})) // use bodyParser for access to req.body for form submissions
 
-/*
-    NOTES:
-        - when gathering data for users, caution is made to make sure userPassword is not being grabbed for the end user
-
-*/
-
 // --------------------------------------------------------- misc
 app.get("/", function(req, res) {
     res.render("homepage.ejs", data);
@@ -41,41 +35,66 @@ app.get("/about", function(req, res) {
 });
 
 app.post("/searchresult", function(req, res) {
-    let values = [];
+
+    // NOTE: we are using .slice(0, -1) on strings that represent the names of tables in order to get the "name" row associated with that table
+    // i.e. we need to get postName/topicName/userName from the posts/topics/users table, so we simply cut off the "s" from "posts"/"topics"/"users" and append "Name".
+
     let query = "";
 
-    if (req.body.radio != undefined) {
-        if (req.body.radio == "users") {
-            values.push("userName, userCreationDate");
-        } else {
-            values.push("*");
-        }
-        values.push(req.body.radio)
+    let queryItems = new Map();
 
-        query += "SELECT " + values[0] + " FROM " + values[1]
+    // columns with conflicting names are alias'd using the AS keyword
+    queryItems.set("users", "users.userName AS user_userName, userDescription, userCreationDate");
+    queryItems.set("posts", "posts.postName AS post_postName, postId, posts.topicName AS post_topicName, posts.userName AS post_userName");
+    queryItems.set("topics", "topics.topicName AS topic_topicName");
+
+    options = []
+    if (Array.isArray(req.body.radio)) {
+        let select = ""
+        let tables = []
+        let tableRowNames = []
+
+        for (let i = 0; i < req.body.radio.length; i++) {
+            // prepare tableRowNames for querying @ line 78
+            if (req.body.radio[i] == "users") {
+                tableRowNames.push("user_userName")
+            } else if (req.body.radio[i] == "posts") {
+                tableRowNames.push("post_postName");
+            } else {
+                tableRowNames.push("topic_topicName");
+            }
+
+
+            select += queryItems.get(req.body.radio[i]) + ","; // final comma is sliced off
+            tables.push(req.body.radio[i]);
+            options.push(req.body.radio[i]);
+        }
+
+        query = "SELECT " + select.slice(0, -1) + " FROM " + tables[0] + " CROSS JOIN " + tables[1]
+
+        if (tables.length == 3) {
+            query += " CROSS JOIN " + tables[2];
+        }
+
+        // incorporate query as subquery, for searching names
+        query = "SELECT DISTINCT * FROM (" + query + ") AS result WHERE "
+        for (let i = 0; i < tableRowNames.length; i++) {
+            query += tableRowNames[i] + " LIKE '%" + req.body.search + "%'";
+            if (i != tableRowNames.length - 1) {
+                query += " OR "
+            }
+        }
+    } else {
+        query = "SELECT " + queryItems.get(req.body.radio) + " FROM " + req.body.radio + " WHERE " + req.body.radio.slice(0, -1) + "Name LIKE '%" + req.body.search + "%'";
+        options.push(req.body.radio);
     }
 
-    if (req.body.search != undefined) {
-        if (req.body.radio == "users") {
-            values.push("userName");
-        } else if (req.body.radio == "posts") {
-            values.push("postName");
-        } else {
-            values.push("topicName");
-        }
-        values.push(req.body.search)
-
-        query += " WHERE " + values[2] + " = '%" + req.body.search + "%'";
-     }
-
-
-    console.log(query)
-    db.query(query, values, (err, result) => {
+    console.log(query);
+    db.query(query, (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
-            data = Object.assign({}, data, {result:result}, {option:req.body.radio});
-            console.log(data)
+            data = Object.assign({}, data, {result:result}, {options:options});
             res.render("search/index.ejs", data);
         }
     })
@@ -93,7 +112,6 @@ app.get("/posts", function(req, res) {
 });
 
 app.get("/topic/:topicname/:postid", function(req, res) {
-    console.log(req.params)
     db.query("SELECT * FROM posts WHERE postId = " + req.params.postid, (err, result) => {
         if (err) {
             console.error(err.message);
@@ -106,7 +124,14 @@ app.get("/topic/:topicname/:postid", function(req, res) {
 
 app.get("/newpost", function(req, res) {
     data = Object.assign({}, data, alreadyfailed = false);
-    res.render("posts/newpost.ejs", data);
+    db.query("SELECT topicName from topics", (err, result) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            data = Object.assign({}, data, {result:result})
+            res.render("posts/newpost.ejs", data);
+        }
+    });
 });
 
 app.post("/postsubmitted", function(req, res) {
@@ -117,7 +142,7 @@ app.post("/postsubmitted", function(req, res) {
         if (err) {
             console.error(err.message);
         } else {
-            if (result[0] == undefined) { // password does not correlate to any account
+            if (result[0] === undefined) { // password does not correlate to any account
                 incorrectCredentials = true;
                 return;
             }
@@ -176,12 +201,13 @@ app.get("/topics", function(req, res) {
 });
 
 app.get("/topic/:topicname", function(req, res) {
-    db.query("SELECT * FROM topics LEFT OUTER JOIN posts ON posts.topicName = '" + req.params.topicname + "'", (err, result) => {
+    let query = "SELECT * FROM topics LEFT OUTER JOIN posts ON posts.topicName = '" + req.params.topicname + "'";
+    console.log(query)
+    db.query(query, (err, result) => {
         if (err) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result:result}, alreadyfailed = false);
-            console.log(data)
             res.render("topics/topic.ejs", data);
         }
     });
@@ -217,20 +243,35 @@ app.post("/topicsubmitted", function(req, res) {
         return;
     }
 
-    let sqlquery = "INSERT INTO topics (topicName, topicDescription, topicCreationDate)VALUES(" +
+    let topicquery = "INSERT INTO topics (topicName, topicDescription, topicCreationDate)VALUES(" +
         "'" + req.body.topicname + "', " +
         "'" + req.body.topicdescription + "', " +
         "NOW()" +
     ")";
 
-    db.query(sqlquery, (err, result) => {
+    db.query(topicquery, (err, result) => {
         if (err) {
             console.error(err.message);
+            res.redirect("/newtopic");
         } else {
             data = Object.assign({}, data, {result:result});
             res.redirect("/topics")
         }
     });
+
+    let postquery = "INSERT INTO posts (postName, postBody, topicName postCreationDate)VALUES(" +
+        "'Welcome'," +
+        "'Welcome to " + req.body.topicname + ".'," +
+        "'" + req.body.topicname + "', " +
+        "NOW()" +
+    ")";
+
+    db.query(postquery, (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+    })
+
 });
 
 app.post("/jointopic/:topicname", function(req, res) {
@@ -245,7 +286,7 @@ app.post("/jointopic/:topicname", function(req, res) {
                 incorrectCredentials = true;
                 return;
             }
-            if (result[0].userName != req.body.username || result[0].userName != "admin") { // incorrect password-username combination, or not admin
+            if (result[0].userName != req.body.username) { // incorrect password-username combination
                 incorrectCredentials = true;
                 return;
             }
@@ -307,7 +348,6 @@ app.get("/user/:username", function(req, res) {
             console.error(err.message);
         } else {
             data = Object.assign({}, data, {result: result});
-            console.log(data)
             res.render("users/user.ejs", data)
         }
     })

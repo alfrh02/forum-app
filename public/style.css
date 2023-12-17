@@ -12,6 +12,7 @@
 a {
     color: #606ee6;
     text-decoration: none;
+    cursor: pointer;
 }
 
 a:hover {
@@ -76,4 +77,17 @@ nav label {
 
 .submit-form form #topicdescription {
     height: 250px;
+}
+
+.show-login-button {
+    display: inline-block;
+}
+
+.dropdown {
+    display: inline-block;
+}
+
+.dropdown div {
+    position: absolute;
+    visibility: hidden;
 }

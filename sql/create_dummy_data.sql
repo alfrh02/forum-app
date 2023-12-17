@@ -33,6 +33,13 @@ INSERT INTO topics (topicName, topicDescription, topicCreationDate)VALUES(
     NOW()
 );
 
+INSERT INTO posts (postName, postBody, topicName, postCreationDate)VALUES(
+    "Welcome",
+    "Welcome to Music.",
+    "Music",
+    NOW()
+)
+
 INSERT INTO topics (topicName, topicDescription, topicCreationDate)VALUES(
 	"Politics",
     "Stay away",

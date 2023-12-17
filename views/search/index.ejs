@@ -11,35 +11,37 @@
             <input type="text" id="search" name="search"/>
 
             <label for="posts">posts</label>
-            <input type="radio" id="posts" name="radio" value="posts"/>
+            <input type="checkbox" id="posts" name="radio" value="posts"/>
             <label for="topics">topics</label>
-            <input type="radio" id="topics" name="radio" value="topics"/>
+            <input type="checkbox" id="topics" name="radio" value="topics"/>
             <label for="users">users</label>
-            <input type="radio" id="users" name="radio" value="users"/>
+            <input type="checkbox" id="users" name="radio" value="users"/>
 
             <input type="submit" value="Search"/>
         </form>
-        <% if (option == "posts") { %>
-            <!-- POSTS -->
-            <% for (let i = 0; i < result.length; i++) { %>
-                <div>
-                    <a href="/topic/<%=result[i].topicName%>/<%=result[i].postId%>"> <%=result[i].postName%></a>
-                    by <a href="/user/<%=result[i].userName%>"><%=result[i].userName%></a>, <%=result[i].postCreationDate%>
-                </div>
-            <% } %>
-        <% } else if (option == "topics") { %>
-            <!-- TOPICS -->
-            <% for (let i = 0; i < result.length; i++) { %>
-                <div>
-                    <a href="/topic/<%=result[i].topicName%>"> <%=result[i].topicName%>, <%=result[i].topicCreationDate%></a>
-                </div>
-            <% } %>
-        <% } else { %>
-            <!-- USERS -->
-            <% for (let i = 0; i < result.length; i++) { %>
-                <div>
-                    <a href="/user/<%=result[i].userName%>"> <%=result[i].userName%>, <%=result[i].userCreationDate%></a>
-                </div>
+        <% for (let i = 0; i < result.length; i++) { %>
+            <% if (options.includes("posts")) { %>
+                <% if (result[i].post_postName != null) { %>
+                    <!-- POSTS -->
+                    <div>
+                        <a href="/topic/<%=result[i].post_topicName%>/<%=result[i].postId%>"> <%=result[i].post_postName%></a>
+                        by <a href="/user/<%=result[i].post_userName%>"><%=result[i].post_userName%></a>, <%=result[i].postCreationDate%>
+                    </div>
+                <% } else if (options.includes("topics")) { %>
+                    <% if (result[i].topic_topicName != null) { %>
+                    <!-- TOPICS -->
+                        <div>
+                            <a href="/topic/<%=result[i].topic_topicName%>"> <%=result[i].topic_topicName%>, <%=result[i].topicCreationDate%></a>
+                        </div>
+                    <% } else if (options.includes("users")) { %>
+                        <% if (result[i].user_userName != null) { %>
+                        <!-- USERS -->
+                        <div>
+                            <a href="/user/<%=result[i].user_userName%>"> <%=result[i].user_userName%>, <%=result[i].userCreationDate%></a>
+                        </div>
+                        <% } %>
+                    <% } %>
+                <% } %>
             <% } %>
         <% } %>
     </body>

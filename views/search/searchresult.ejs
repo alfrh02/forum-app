@@ -6,11 +6,29 @@
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <a href="/">Homepage</a>
-        <ul>
+        <nav>
+            <div class="container">
+                <a href="/">Homepage</a>
+            </div>
+            <form method="POST" action="/searchresult">
+                <input type="text" id="search" name="search"/>
+
+                <label for="posts">posts</label>
+                <input type="checkbox" id="posts" name="radio" value="posts"/>
+                <label for="topics">topics</label>
+                <input type="checkbox" id="topics" name="radio" value="topics"/>
+                <label for="users">users</label>
+                <input type="checkbox" id="users" name="radio" value="users"/>
+
+                <input type="submit" value="Search"/>
+            </form>
+        </nav>
         <% for (let i = 0; i < result.length; i++) { %>
             <li><a href="/post/<%=result[i].name%>"><%=result[i].name%>, <%=result[i].creationDate%></a></li>
+            <div class="index-item">
+                <a href="/topic/<%=result[i].topicName%>"> <%=result[i].topicName%></a>
+                <p><%=result[i].topicDescription%></p>
+            </div>
         <% } %>
-        </ul>
     </body>
 </html>
